@@ -4,19 +4,21 @@ import no.entra.bacnet.octet.Octet;
 
 import java.util.Arrays;
 
+import static no.entra.bacnet.utils.HexUtils.intToHexString;
+
 public class Bvlc {
     private final Octet type = Octet.fromHexString("81");
-    private final no.entra.bacnet.bvlc.BvlcFunction function;
+    private final BvlcFunction function;
     private int bvlcLength = -1;
     private int fullMessageLength = -1;
     private Octet[] originatingDeviceIp = null;
     private Octet[] port = null;
 
     public Bvlc(Octet function) {
-        this.function = no.entra.bacnet.bvlc.BvlcFunction.fromOctet(function);
+        this.function = BvlcFunction.fromOctet(function);
     }
 
-    public Bvlc(no.entra.bacnet.bvlc.BvlcFunction function, int fullMessageOctetLength) {
+    public Bvlc(BvlcFunction function, int fullMessageOctetLength) {
         this.function = function;
         this.fullMessageLength = fullMessageOctetLength;
     }
@@ -25,7 +27,7 @@ public class Bvlc {
         return type.toString();
     }
 
-    public no.entra.bacnet.bvlc.BvlcFunction getFunction() {
+    public BvlcFunction getFunction() {
         return function;
     }
 
@@ -80,6 +82,11 @@ public class Bvlc {
     public static int findExpectdNumberOfOctetsInBvll(String messageLength) {
         int length = Integer.parseInt(messageLength, 16);
         return length;
+    }
+
+    public String toHexString() {
+        String hexString = type.toString() + function.getBvlcFunctionHex() + intToHexString(fullMessageLength,4);
+        return hexString;
     }
 
     @Override
