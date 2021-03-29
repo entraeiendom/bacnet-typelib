@@ -8,7 +8,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ArrayTag {
     private static final Logger log = getLogger(ArrayTag.class);
 
+    public static final Octet ARRAY1_START = new Octet("1e");
+    public static final Octet ARRAY1_END = new Octet("1f");
+
     private final Octet arrayTag;
+
 
     public static final Octet ARRAYLENGTH1 = new Octet("19");
 
