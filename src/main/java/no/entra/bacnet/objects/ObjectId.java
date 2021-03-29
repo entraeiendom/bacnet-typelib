@@ -7,22 +7,22 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ObjectId {
     private static final Logger log = getLogger(ObjectId.class);
 
-    private no.entra.bacnet.objects.ObjectType objectType;
+    private ObjectType objectType;
     private String instanceNumber;
 
     public ObjectId() {
     }
 
-    public ObjectId(no.entra.bacnet.objects.ObjectType objectType, String instanceNumber) {
+    public ObjectId(ObjectType objectType, String instanceNumber) {
         this.objectType = objectType;
         this.instanceNumber = instanceNumber;
     }
 
-    public no.entra.bacnet.objects.ObjectType getObjectType() {
+    public ObjectType getObjectType() {
         return objectType;
     }
 
-    public void setObjectType(no.entra.bacnet.objects.ObjectType objectType) {
+    public void setObjectType(ObjectType objectType) {
         this.objectType = objectType;
     }
 
@@ -34,6 +34,13 @@ public class ObjectId {
         this.instanceNumber = instanceNumber;
     }
 
+    public String toHexString() {
+        return ObjectIdMapper.toHexString(this);
+    }
+
+    public static ObjectId fromHexString(String hexString) {
+        return ObjectIdMapper.fromHexString(hexString);
+    }
 
     @Override
     public String toString() {

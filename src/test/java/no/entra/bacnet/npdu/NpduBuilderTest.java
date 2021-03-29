@@ -10,6 +10,6 @@ class NpduBuilderTest {
     void withExpectingReply() {
         String expectedHexString = "0104";
         Npdu expectingReply = new NpduBuilder().withExpectingReply().build();
-        assertEquals(expectedHexString, expectingReply.getHexString());
+        assertEquals(expectedHexString, expectingReply.toHexString());
     }
 }

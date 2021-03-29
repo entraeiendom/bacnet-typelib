@@ -93,7 +93,7 @@ public class Npdu {
         return expectingResponse;
     }
 
-    public String getHexString() {
+    public String toHexString() {
         String hexString = version.toString() + control.toString();
         return hexString;
     }
