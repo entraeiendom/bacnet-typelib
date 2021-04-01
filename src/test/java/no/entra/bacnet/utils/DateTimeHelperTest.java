@@ -6,8 +6,8 @@ import java.time.Instant;
 
 import static no.entra.bacnet.utils.DateTimeHelper.fromIso8601Json;
 import static no.entra.bacnet.utils.DateTimeHelper.iso8601DateTime;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DateTimeHelperTest {
 
@@ -15,7 +15,11 @@ class DateTimeHelperTest {
     void testIso8601DateTimeTest() {
         String isoDateTime = iso8601DateTime();
         assertNotNull(Instant.parse(isoDateTime));
-        assertEquals(24, isoDateTime.length(), "Ensure nanos are not included in: " + isoDateTime);
+        assertTrue( isoDateTime.endsWith("Z"), "Ensure nanos are not included in: " + isoDateTime);
+        String[] timesegments = isoDateTime.split("\\.");
+        String lastSegment = timesegments[timesegments.length -1];
+
+        assertTrue( lastSegment.length() < 5, "Ensure nanos are not included in: " + isoDateTime);
     }
 
     @Test
