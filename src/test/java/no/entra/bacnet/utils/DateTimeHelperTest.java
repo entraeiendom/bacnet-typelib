@@ -15,7 +15,7 @@ class DateTimeHelperTest {
     void testIso8601DateTimeTest() {
         String isoDateTime = iso8601DateTime();
         assertNotNull(Instant.parse(isoDateTime));
-        assertEquals(24, isoDateTime.length(), "Ensure nanos are not included.");
+        assertEquals(24, isoDateTime.length(), "Ensure nanos are not included in: " + isoDateTime);
     }
 
     @Test
