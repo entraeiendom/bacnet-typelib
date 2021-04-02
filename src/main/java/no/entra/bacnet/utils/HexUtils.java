@@ -8,7 +8,6 @@ import java.util.BitSet;
 
 import static no.entra.bacnet.octet.OctetConstants.ENCODING_UCS_2;
 import static no.entra.bacnet.octet.OctetConstants.ENCODING_UTF_8;
-import static no.entra.bacnet.utils.HexByteConverter.hexStringToByteArray;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class HexUtils {
@@ -182,5 +181,33 @@ public class HexUtils {
         String hexStr = Integer.toString(decimal,16);
         int lenght = 8;
         return String.format("%1$" + lenght + "s", hexStr).replace(' ', '0');
+    }
+
+    public static int findMessageLength(String bacnetMessageInHex) {
+        String lenghtHex = bacnetMessageInHex.substring(4, 8);
+        int length = HexUtils.toInt(lenghtHex);
+        return length * 2;
+    }
+
+    public static byte[] hexStringToByteArray(String hexString) {
+        int len = hexString.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+                    + Character.digit(hexString.charAt(i+1), 16));
+        }
+        return data;
+    }
+    public static String integersToHex(byte[] receivedBytes) {
+        String hexString = "";
+        for (byte receivedByte : receivedBytes) {
+            hexString += integerByteToHex(receivedByte);
+        }
+        return hexString;
+    }
+
+    public static String integerByteToHex(byte hexAsByte) {
+        String hex = String.format("%02x", hexAsByte);
+        return hex;
     }
 }
