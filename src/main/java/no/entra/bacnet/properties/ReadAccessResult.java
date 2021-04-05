@@ -1,8 +1,12 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.properties;
 
 import no.entra.bacnet.EntraUnknownOperationException;
 import no.entra.bacnet.apdu.PDTag;
 import no.entra.bacnet.apdu.SDContextTag;
+import no.entra.bacnet.objects.ObjectId;
+import no.entra.bacnet.objects.ObjectIdMapper;
+import no.entra.bacnet.objects.ObjectIdMapperResult;
+import no.entra.bacnet.objects.Unit;
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.octet.OctetReader;
 import no.entra.bacnet.utils.HexUtils;
@@ -103,10 +107,10 @@ public class ReadAccessResult {
                     //PresentValue
                     String unprocessedHexString = listReader.unprocessedHexString();
                     while (unprocessedHexString != null && !unprocessedHexString.isEmpty()) {
-                        no.entra.bacnet.objects.PropertyResult propertyResult = parseProperty(unprocessedHexString);
+                        PropertyResult propertyResult = parseProperty(unprocessedHexString);
                         if (propertyResult != null ) {
                             if (propertyResult.getProperty() != null) {
-                                no.entra.bacnet.objects.Property property = propertyResult.getProperty();
+                                Property property = propertyResult.getProperty();
                                 String key = property.getKey();
                                 Object value = property.getValue();
                                 accessResult.setResultByKey(key, value);
@@ -123,12 +127,12 @@ public class ReadAccessResult {
         return accessResult;
     }
 
-    public static no.entra.bacnet.objects.PropertyResult parseProperty(String unprocessedHexString) {
-        no.entra.bacnet.objects.PropertyResult propertyResult = null;
+    public static PropertyResult parseProperty(String unprocessedHexString) {
+        PropertyResult propertyResult = null;
         OctetReader propertyReader = new OctetReader(unprocessedHexString);
         Octet contextTag = propertyReader.next();
         if (contextTag.equals(Octet.fromHexString(LIST_END_HEX))) {
-            propertyResult = new no.entra.bacnet.objects.PropertyResult(null);
+            propertyResult = new PropertyResult(null);
         } else {
             log.debug("Context Tag: {}", contextTag);
             PropertyIdentifier presentValuePid = null;
@@ -141,7 +145,7 @@ public class ReadAccessResult {
             Octet startOfList = propertyReader.next();
             log.debug(propertyReader.unprocessedHexString());
             if (startOfList.equals(PDTag.PDOpen4)) {
-                no.entra.bacnet.objects.Property property = null;
+                Property property = null;
                 if (presentValuePid == PropertyIdentifier.PresentValue) {
                     Octet applicationTag = propertyReader.next();
                     char valueLength = applicationTag.getSecondNibble();
@@ -155,10 +159,10 @@ public class ReadAccessResult {
                             int valueAsNumber = Integer.parseInt(valueAsString, 16);
                             //IEEE 754
                             Float valueAsReal = Float.intBitsToFloat(valueAsNumber);
-                            property = new no.entra.bacnet.objects.Property(presentValuePid.name(), valueAsReal);
+                            property = new Property(presentValuePid.name(), valueAsReal);
                         } else {
                             //Setting string value
-                            property = new no.entra.bacnet.objects.Property(presentValuePid.name(), valueAsString);
+                            property = new Property(presentValuePid.name(), valueAsString);
                         }
                     }
                 } else if (presentValuePid == PropertyIdentifier.Units) {
@@ -169,7 +173,7 @@ public class ReadAccessResult {
                     String valueAsHex = propertyReader.next(valueOctetLength);
                     Unit unit = Unit.fromUnitHex(valueAsHex);
                     if (unit != null) {
-                        property = new no.entra.bacnet.objects.Property(presentValuePid.name(), unit.name());
+                        property = new Property(presentValuePid.name(), unit.name());
                     }
                 } else if (presentValuePid == PropertyIdentifier.ObjectName || presentValuePid == PropertyIdentifier.Description) {
                     log.debug("Find ObjectName from: {}", propertyReader.unprocessedHexString());
@@ -198,7 +202,7 @@ public class ReadAccessResult {
 
 
                     if (objectName != null) {
-                        property = new no.entra.bacnet.objects.Property(presentValuePid.name(), objectName);
+                        property = new Property(presentValuePid.name(), objectName);
                     }
 
                 } else {
@@ -208,13 +212,13 @@ public class ReadAccessResult {
 
                 propertyReader.next();
                 unprocessedHexString = propertyReader.unprocessedHexString();
-                propertyResult = new no.entra.bacnet.objects.PropertyResult(unprocessedHexString, property);
+                propertyResult = new PropertyResult(unprocessedHexString, property);
                 //Pull closing tag
 
             } else {
                 propertyReader.next();
                 unprocessedHexString = propertyReader.unprocessedHexString();
-                propertyResult = new no.entra.bacnet.objects.PropertyResult(unprocessedHexString, null);
+                propertyResult = new PropertyResult(unprocessedHexString, null);
             }
         }
         return propertyResult;

@@ -1,11 +1,12 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.properties;
 
+import no.entra.bacnet.objects.ObjectId;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.entra.bacnet.objects.PropertyIdentifier.*;
+import static no.entra.bacnet.properties.PropertyIdentifier.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ReadAccessSpecificationTest {

@@ -1,4 +1,4 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.properties;
 
 public class Property {
     private final String key;

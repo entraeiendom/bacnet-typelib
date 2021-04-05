@@ -1,14 +1,14 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.properties;
 
 public class PropertyResult {
     private final String unprocessedHexString;
-    private no.entra.bacnet.objects.Property property = null;
+    private Property property = null;
 
     public PropertyResult(String unprocessedHexString) {
         this.unprocessedHexString = unprocessedHexString;
     }
 
-    public PropertyResult(String unprocessedHexString, no.entra.bacnet.objects.Property property) {
+    public PropertyResult(String unprocessedHexString, Property property) {
         this.unprocessedHexString = unprocessedHexString;
         this.property = property;
     }
@@ -17,11 +17,11 @@ public class PropertyResult {
         return unprocessedHexString;
     }
 
-    public no.entra.bacnet.objects.Property getProperty() {
+    public Property getProperty() {
         return property;
     }
 
-    public void setProperty(no.entra.bacnet.objects.Property property) {
+    public void setProperty(Property property) {
         this.property = property;
     }
 }

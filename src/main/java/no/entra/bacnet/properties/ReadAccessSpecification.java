@@ -1,6 +1,7 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.properties;
 
 import no.entra.bacnet.apdu.SDContextTag;
+import no.entra.bacnet.objects.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;

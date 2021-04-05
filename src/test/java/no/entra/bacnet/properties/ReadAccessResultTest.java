@@ -1,13 +1,16 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.properties;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import no.entra.bacnet.objects.ObjectId;
+import no.entra.bacnet.objects.ObjectIdMapper;
+import no.entra.bacnet.objects.ObjectIdMapperResult;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-import static no.entra.bacnet.objects.PropertyIdentifier.*;
+import static no.entra.bacnet.properties.PropertyIdentifier.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ReadAccessResultTest {

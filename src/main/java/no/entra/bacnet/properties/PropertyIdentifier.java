@@ -1,4 +1,4 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.properties;
 
 
 import no.entra.bacnet.octet.Octet;
