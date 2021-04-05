@@ -12,6 +12,7 @@ public class ReadAccessSpecification {
     private final ObjectId objectIdentifier;
     private final List<PropertyIdentifier> propertyIdentifiers;
 
+
     public ReadAccessSpecification(ObjectId objectIdentifier, List<PropertyIdentifier> propertyIdentifiers) {
         this.objectIdentifier = objectIdentifier;
         this.propertyIdentifiers = propertyIdentifiers;
