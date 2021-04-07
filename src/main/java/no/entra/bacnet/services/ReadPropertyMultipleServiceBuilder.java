@@ -41,6 +41,11 @@ public final class ReadPropertyMultipleServiceBuilder {
         return this;
     }
 
+    public ReadPropertyMultipleServiceBuilder withDeviceId(DeviceId deviceId) {
+        this.deviceId = deviceId;
+        return this;
+    }
+
     public ReadPropertyMultipleServiceBuilder findCountOfAvailableObjectsOnDevice(DeviceId deviceId) {
         PropertyReference findObjectListSize = new PropertyReference(PropertyIdentifier.ObjectList, 0);
         this.deviceId = deviceId;
@@ -80,4 +85,6 @@ public final class ReadPropertyMultipleServiceBuilder {
         String hexString = readPropertyMultipleService.buildHexString();
         return readPropertyMultipleService;
     }
+
+
 }
