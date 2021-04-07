@@ -1,8 +1,8 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.apdu;
 
 import no.entra.bacnet.octet.Octet;
 
-public enum PduType {
+public enum ApduType {
     ConfirmedRequest('0'),
     UnconfirmedRequest('1'),
     SimpleAck('2'),
@@ -14,8 +14,8 @@ public enum PduType {
 
     private final char pduTypeChar;
 
-    public static PduType fromPduTypeChar(char pduTypeChar) {
-        for (PduType type : values()) {
+    public static ApduType fromPduTypeChar(char pduTypeChar) {
+        for (ApduType type : values()) {
             if (type.getPduTypeChar() == pduTypeChar) {
                 return type;
             }
@@ -23,7 +23,7 @@ public enum PduType {
         return null;
     }
 
-    public static PduType fromOctet(Octet pduTypeOctet) {
+    public static ApduType fromOctet(Octet pduTypeOctet) {
         if (pduTypeOctet == null) {
             return null;
         }
@@ -36,7 +36,7 @@ public enum PduType {
     }
 
     // enum constructor - cannot be public or protected
-    PduType(char pduTypeChar) {
+    ApduType(char pduTypeChar) {
         this.pduTypeChar = pduTypeChar;
     }
 

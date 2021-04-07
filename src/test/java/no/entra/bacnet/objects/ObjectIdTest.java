@@ -16,7 +16,7 @@ class ObjectIdTest {
         ObjectId objectId = result.getParsedObject();
         assertNotNull(objectId);
         assertEquals(AnalogInput, objectId.getObjectType());
-        assertEquals("3000047", objectId.getInstanceNumber());
+        assertEquals(3000047, objectId.getInstanceNumber());
         assertEquals(AnalogInput + "_3000047", objectId.toString());
     }
 
@@ -26,7 +26,7 @@ class ObjectIdTest {
         ObjectId objectId = ObjectIdMapper.fromHexString(idHexString);
         assertNotNull(objectId);
         assertEquals(AnalogInput, objectId.getObjectType());
-        assertEquals("0", objectId.getInstanceNumber());
+        assertEquals(0, objectId.getInstanceNumber());
         assertEquals(AnalogInput + "_0", objectId.toString());
         idHexString = "05000001";
         objectId = ObjectIdMapper.fromHexString(idHexString);
@@ -36,7 +36,7 @@ class ObjectIdTest {
 
     @Test
     void toHexString() {
-        ObjectId objectId = new ObjectId(AnalogInput,"0");
+        ObjectId objectId = new ObjectId(AnalogInput,0);
         String hexString = ObjectIdMapper.toHexString(objectId);
         assertEquals("00000000", hexString);
     }

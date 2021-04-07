@@ -47,7 +47,7 @@ class ReadAccessResultTest {
         String expected = "{\n" +
                 "  \"objectId\": {\n" +
                 "    \"objectType\": \"AnalogInput\",\n" +
-                "    \"instanceNumber\": \"3000047\"\n" +
+                "    \"instanceNumber\": 3000047\n" +
                 "  },\n" +
                 "  \"results\": {\n" +
                 "    \"PresentValue\": 22.567,\n" +

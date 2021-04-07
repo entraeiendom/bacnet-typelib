@@ -8,12 +8,12 @@ public class ObjectId {
     private static final Logger log = getLogger(ObjectId.class);
 
     private ObjectType objectType;
-    private String instanceNumber;
+    private Integer instanceNumber;
 
     public ObjectId() {
     }
 
-    public ObjectId(ObjectType objectType, String instanceNumber) {
+    public ObjectId(ObjectType objectType, Integer instanceNumber) {
         this.objectType = objectType;
         this.instanceNumber = instanceNumber;
     }
@@ -26,11 +26,11 @@ public class ObjectId {
         this.objectType = objectType;
     }
 
-    public String getInstanceNumber() {
+    public Integer getInstanceNumber() {
         return instanceNumber;
     }
 
-    public void setInstanceNumber(String instanceNumber) {
+    public void setInstanceNumber(Integer instanceNumber) {
         this.instanceNumber = instanceNumber;
     }
 

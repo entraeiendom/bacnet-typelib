@@ -44,7 +44,7 @@ public class ObjectIdMapper {
         String hexString = null;
         if (objectId != null) {
             String objectTypeBits = paddedObjectTypeBits(objectId.getObjectType());
-            int instanceNumber = Integer.parseInt(objectId.getInstanceNumber());
+            int instanceNumber = objectId.getInstanceNumber();
             String instanceNumberBits = paddedInstanceNumberBits(instanceNumber);
             hexString = HexUtils.binaryToHex(objectTypeBits + instanceNumberBits);
         }
@@ -52,7 +52,7 @@ public class ObjectIdMapper {
     }
 
     static String fillInstanceNumber(no.entra.bacnet.objects.ObjectId objectId) {
-        String hexNumber = objectId.getInstanceNumber();
+        Integer hexNumber = objectId.getInstanceNumber();
         int lenght = 6;
         return String.format("%1$" + lenght + "s", hexNumber).replace(' ', '0');
     }
@@ -64,7 +64,7 @@ public class ObjectIdMapper {
         int objectTypeInt = findObjectTypeInt(typeAndInstanceBits);
         Integer instanceNumber = findInstanceNumber(typeAndInstanceBits);
         no.entra.bacnet.objects.ObjectType objectType = no.entra.bacnet.objects.ObjectType.fromObjectTypeInt(objectTypeInt);
-        objectId = new no.entra.bacnet.objects.ObjectId(objectType,instanceNumber.toString());
+        objectId = new no.entra.bacnet.objects.ObjectId(objectType,instanceNumber);
         return objectId;
     }
 

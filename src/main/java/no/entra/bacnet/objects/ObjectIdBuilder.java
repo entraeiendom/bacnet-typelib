@@ -5,7 +5,7 @@ import no.entra.bacnet.utils.HexUtils;
 
 public class ObjectIdBuilder {
     private final no.entra.bacnet.objects.ObjectType objectType;
-    private String instanceNumber;
+    private Integer instanceNumber;
 
     public ObjectIdBuilder(Octet objectTypeOctet) {
         this.objectType = no.entra.bacnet.objects.ObjectType.fromOctet(objectTypeOctet);
@@ -13,7 +13,7 @@ public class ObjectIdBuilder {
 
     public ObjectIdBuilder withInstanceNumberOctet(Octet[] instanceNumberOctets) {
         String instanceNumberString = HexUtils.octetsToString(instanceNumberOctets);
-        instanceNumber = Integer.valueOf(HexUtils.toInt(instanceNumberString)).toString();
+        instanceNumber = HexUtils.toInt(instanceNumberString);
         return this;
     }
 

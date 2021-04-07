@@ -1,16 +1,14 @@
 package no.entra.bacnet.apdu;
 
-import no.entra.bacnet.objects.PduType;
-
 public class Apdu {
 
-    private final PduType apduType;
+    private final ApduType apduType;
     private final char pduFlags; //2 = unsegmented request, no more segments, segmented response accepted
 
     private final char maxSegmentsAccepted; //7 = more than 64 accepted
     private final char maxApduLengthAccepted; // 5 = up to 1476 octets
 
-    public Apdu(PduType apduType, char pduFlags, char maxSegmentsAccepted, char maxApduLengthAccepted) {
+    public Apdu(ApduType apduType, char pduFlags, char maxSegmentsAccepted, char maxApduLengthAccepted) {
         this.apduType = apduType;
         this.pduFlags = pduFlags;
         this.maxSegmentsAccepted = maxSegmentsAccepted;
@@ -22,7 +20,7 @@ public class Apdu {
     }
 
     public static final class ApduBuilder {
-        private PduType apduType;
+        private ApduType apduType;
         private char pduFlags; //2 = unsegmented request, no more segments, segmented response accepted
         private char maxSegmentsAccepted; //7 = more than 64 accepted
         private char maxApduLengthAccepted; // 5 = up to 1476 octets
@@ -47,7 +45,7 @@ public class Apdu {
             }
         }
 
-        public ApduBuilder withApduType(PduType apduType) {
+        public ApduBuilder withApduType(ApduType apduType) {
             this.apduType = apduType;
             return this;
         }

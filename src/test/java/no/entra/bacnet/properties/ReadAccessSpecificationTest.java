@@ -18,7 +18,7 @@ class ReadAccessSpecificationTest {
         propertyIdentifiers.add(Description);
         propertyIdentifiers.add(Units);
         propertyIdentifiers.add(PropertyIdentifier.PresentValue);
-        ObjectId objectId = new ObjectId(no.entra.bacnet.objects.ObjectType.Device, "8");
+        ObjectId objectId = new ObjectId(no.entra.bacnet.objects.ObjectType.Device, 8);
         ReadAccessSpecification readAccessSpecification = new ReadAccessSpecification(objectId, propertyIdentifiers);
         String expectedHexString = "0c020000081e094d091c097509551f";
         assertEquals(expectedHexString, readAccessSpecification.buildHexString());
@@ -26,7 +26,7 @@ class ReadAccessSpecificationTest {
 
     @Test
     void buildHexStringDynamic() {
-        ObjectId objectId = new ObjectId(no.entra.bacnet.objects.ObjectType.Device, "8");
+        ObjectId objectId = new ObjectId(no.entra.bacnet.objects.ObjectType.Device, 8);
         ReadAccessSpecification readAccessSpecification = new ReadAccessSpecification(objectId, ObjectName, Description, Units, PresentValue );
         String expectedHexString = "0c020000081e094d091c097509551f";
         assertEquals(expectedHexString, readAccessSpecification.buildHexString());

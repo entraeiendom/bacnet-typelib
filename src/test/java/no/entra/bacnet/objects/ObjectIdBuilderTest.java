@@ -17,7 +17,7 @@ class ObjectIdBuilderTest {
         ObjectId objectId = new ObjectIdBuilder(objectIdType).withInstanceNumberOctet(octetReader.nextOctets(3)).build();
         assertNotNull(objectId);
         assertEquals(ObjectType.AnalogValue, objectId.getObjectType());
-        assertEquals("11", objectId.getInstanceNumber());
+        assertEquals(11, objectId.getInstanceNumber());
     }
 
     @Test
@@ -28,6 +28,6 @@ class ObjectIdBuilderTest {
         ObjectId objectId = new ObjectIdBuilder(objectIdType).withInstanceNumberOctet(octetReader.nextOctets(3)).build();
         assertNotNull(objectId);
         assertEquals(ObjectType.AnalogInput, objectId.getObjectType());
-        assertEquals("0", objectId.getInstanceNumber());
+        assertEquals(0, objectId.getInstanceNumber());
     }
 }
