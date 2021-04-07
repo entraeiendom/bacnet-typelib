@@ -2,6 +2,7 @@ package no.entra.bacnet.services;
 
 import no.entra.bacnet.apdu.Apdu;
 import no.entra.bacnet.apdu.ApduType;
+import no.entra.bacnet.apdu.ApplicationTag;
 import no.entra.bacnet.apdu.SDContextTag;
 import no.entra.bacnet.bvlc.Bvlc;
 import no.entra.bacnet.bvlc.BvlcBuilder;
@@ -14,15 +15,23 @@ import no.entra.bacnet.objects.ObjectIdMapperResult;
 import no.entra.bacnet.objects.ObjectProperties;
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.octet.OctetReader;
+import no.entra.bacnet.properties.PropertyIdentifier;
 import no.entra.bacnet.properties.PropertyReference;
+import org.slf4j.Logger;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static no.entra.bacnet.apdu.ArrayTag.ARRAY1_END;
 import static no.entra.bacnet.apdu.ArrayTag.ARRAY1_START;
+import static no.entra.bacnet.apdu.SDContextTag.TAG4START;
 import static no.entra.bacnet.utils.HexUtils.intToHexString;
+import static no.entra.bacnet.utils.HexUtils.toInt;
+import static no.entra.bacnet.utils.StringUtils.hasValue;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReadPropertyMultipleService implements Service, BacnetRequest, BacnetResponse {
+    private static final Logger log = getLogger(ReadPropertyMultipleService.class);
 
     private Integer invokeId = null;
     private Set<ObjectProperties> objectProperties = null;
@@ -119,32 +128,87 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
         //List of PropertyReferences
         ObjectIdMapperResult<ObjectId> idMapperResult = ObjectIdMapper.parse(hexString);
         ReadPropertyMultipleService service = new ReadPropertyMultipleService();
-        service.setObjectId(idMapperResult.getParsedObject());
+        ObjectId objectId = idMapperResult.getParsedObject();
         int numberOfOctetsRead = idMapperResult.getNumberOfOctetsRead();
         OctetReader listReader = new OctetReader(hexString);
         listReader.next(numberOfOctetsRead); //Discard
         Octet startList = listReader.next();
         if (startList.equals(ARRAY1_START)) {
-            /*
+            //PropertyReference/ObjectList
             //PresentValue
             String unprocessedHexString = listReader.unprocessedHexString();
-            while (unprocessedHexString != null && !unprocessedHexString.isEmpty()) {
+            while (hasValue(unprocessedHexString)) {
+                Octet contextTag = listReader.next();
+                int arrayIndex = -1;
+                if (contextTag.equals(SDContextTag.TAG2LENGTH1)) {
+                    Octet propertyIdentifierOctet = listReader.next();
+                    PropertyIdentifier propertyIdentifier = PropertyIdentifier.fromOctet(propertyIdentifierOctet);
+                    if (propertyIdentifier.equals(PropertyIdentifier.ObjectList)) {
+                        Octet arrayIndexTag = listReader.next();
 
+                        if (arrayIndexTag.equals(SDContextTag.TAG3LENGTH1)) {
+                            Octet indexNumber = listReader.next();
+                            arrayIndex = toInt(indexNumber);
+                        } else if (arrayIndexTag.equals(SDContextTag.TAG3LENGTH2)) {
+                            arrayIndex = toInt(listReader.nextOctets(2));
+                        }
+                        if (arrayIndex > -1) {
+                            PropertyReference propertyReference = new PropertyReference(propertyIdentifier, arrayIndex);
+                            service.addPropertyReference(propertyReference);
+                            service.setObjectId(objectId);
+                            log.trace("Added: {}", propertyReference );
+                        }
+                    }
+                    if (listReader.unprocessedHexString().startsWith(TAG4START.toString())) {
+                        listReader.next();
+                        ApplicationTag applicationTag = new ApplicationTag(listReader.next());
+                        Object value = null;
+                        if (applicationTag.findType() == 2) {
+                            //integer
+                            int length = applicationTag.findLength();
+                            value = toInt(listReader.nextOctets(length));
+
+                            ObjectProperties objectProperties = new ObjectProperties(objectId,Set.of(propertyIdentifier));
+                            objectProperties.addProperty(propertyIdentifier, value);
+                            service.addObjectProperty(objectProperties);
+                        }
+                    } else if (listReader.unprocessedHexString().startsWith(TAG4START.toString())) {
+                        //Handle Error
+                    }
+                }
+                unprocessedHexString = listReader.unprocessedHexString();
+                /*
                 PropertyResult propertyResult = parseProperty(unprocessedHexString);
                 if (propertyResult != null ) {
                     if (propertyResult.getProperty() != null) {
                         Property property = propertyResult.getProperty();
                         String key = property.getKey();
                         Object value = property.getValue();
-                        accessResult.setResultByKey(key, value);
+                        log.trace("{}:{}", key, value);
+//                        accessResult.setResultByKey(key, value);
                     }
                     unprocessedHexString = propertyResult.getUnprocessedHexString();
                 }
+
+                 */
             }
 
-             */
         }
         return service;
+    }
+
+    private void addObjectProperty(ObjectProperties objectProperty) {
+        if (objectProperties == null) {
+            objectProperties = new HashSet<>();
+        }
+        objectProperties.add(objectProperty);
+    }
+
+    void addPropertyReference(PropertyReference propertyReference) {
+        if (propertyReferences == null) {
+            propertyReferences = new HashSet<>();
+        }
+        propertyReferences.add(propertyReference);
     }
 
 

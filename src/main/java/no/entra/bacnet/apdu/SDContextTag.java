@@ -26,6 +26,10 @@ public class SDContextTag {
     public static final Octet TAG3LENGTH2 = new Octet("3a");
     public static final Octet TAG3LENGTH3 = new Octet("3b");
     public static final Octet TAG3LENGTH4 = new Octet("3c");
+    public static final Octet TAG4START = new Octet("4e");
+    public static final Octet TAG4END = new Octet("4f");
+    public static final Octet TAG5START = new Octet("5e");
+    public static final Octet TAG5END = new Octet("5f");
 
     public SDContextTag(Octet contextTag) {
         this.contextTag = contextTag;

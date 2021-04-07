@@ -1,8 +1,13 @@
 package no.entra.bacnet.device;
 
+import no.entra.bacnet.objects.ObjectProperties;
+import no.entra.bacnet.properties.PropertyIdentifier;
 import no.entra.bacnet.services.ReadPropertyMultipleService;
 import no.entra.bacnet.services.ReadPropertyMultipleServiceBuilder;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -37,5 +42,14 @@ public class FindDevicesAndSensorsOnADeviceFlowTest {
         assertNotNull(countOfObjectsResponse);
         DeviceId deviceId = new DeviceId(8);
         assertEquals(deviceId, countOfObjectsResponse.getObjectId());
+        Set<ObjectProperties> objectProperties = countOfObjectsResponse.getObjectProperties();
+        assertNotNull(objectProperties);
+        assertEquals(1, objectProperties.size());
+        ObjectProperties objectProperty = objectProperties.iterator().next();
+        Set<PropertyIdentifier> propertyIdentifiers = objectProperty.getPropertyIdentifiers();
+        assertEquals(PropertyIdentifier.ObjectList, propertyIdentifiers.iterator().next());
+        Map<PropertyIdentifier, Object> properties = objectProperty.getProperties();
+        assertEquals(Integer.valueOf(361), properties.get(PropertyIdentifier.ObjectList));
+
     }
 }
