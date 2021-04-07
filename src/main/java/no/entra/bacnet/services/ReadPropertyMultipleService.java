@@ -9,7 +9,11 @@ import no.entra.bacnet.bvlc.BvlcFunction;
 import no.entra.bacnet.npdu.Npdu;
 import no.entra.bacnet.npdu.NpduBuilder;
 import no.entra.bacnet.objects.ObjectId;
+import no.entra.bacnet.objects.ObjectIdMapper;
+import no.entra.bacnet.objects.ObjectIdMapperResult;
 import no.entra.bacnet.objects.ObjectProperties;
+import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.octet.OctetReader;
 import no.entra.bacnet.properties.PropertyReference;
 
 import java.util.Set;
@@ -18,7 +22,7 @@ import static no.entra.bacnet.apdu.ArrayTag.ARRAY1_END;
 import static no.entra.bacnet.apdu.ArrayTag.ARRAY1_START;
 import static no.entra.bacnet.utils.HexUtils.intToHexString;
 
-public class ReadPropertyMultipleService implements Service, BacnetRequest {
+public class ReadPropertyMultipleService implements Service, BacnetRequest, BacnetResponse {
 
     private Integer invokeId = null;
     private Set<ObjectProperties> objectProperties = null;
@@ -76,10 +80,6 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest {
 //        return requirement;
 //    }
 
-
-
-
-
     @Override
     public String buildHexString() {
         Apdu apdu = Apdu.ApduBuilder.builder()
@@ -112,4 +112,40 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest {
         String hexString = bvlc.toHexString() + npdu.toHexString() + apduHexString;
         return hexString;
     }
+
+    public static ReadPropertyMultipleService parse(String hexString) {
+        //Expect
+        //ObjectId
+        //List of PropertyReferences
+        ObjectIdMapperResult<ObjectId> idMapperResult = ObjectIdMapper.parse(hexString);
+        ReadPropertyMultipleService service = new ReadPropertyMultipleService();
+        service.setObjectId(idMapperResult.getParsedObject());
+        int numberOfOctetsRead = idMapperResult.getNumberOfOctetsRead();
+        OctetReader listReader = new OctetReader(hexString);
+        listReader.next(numberOfOctetsRead); //Discard
+        Octet startList = listReader.next();
+        if (startList.equals(ARRAY1_START)) {
+            /*
+            //PresentValue
+            String unprocessedHexString = listReader.unprocessedHexString();
+            while (unprocessedHexString != null && !unprocessedHexString.isEmpty()) {
+
+                PropertyResult propertyResult = parseProperty(unprocessedHexString);
+                if (propertyResult != null ) {
+                    if (propertyResult.getProperty() != null) {
+                        Property property = propertyResult.getProperty();
+                        String key = property.getKey();
+                        Object value = property.getValue();
+                        accessResult.setResultByKey(key, value);
+                    }
+                    unprocessedHexString = propertyResult.getUnprocessedHexString();
+                }
+            }
+
+             */
+        }
+        return service;
+    }
+
+
 }

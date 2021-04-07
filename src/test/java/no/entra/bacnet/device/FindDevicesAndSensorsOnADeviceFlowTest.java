@@ -5,6 +5,7 @@ import no.entra.bacnet.services.ReadPropertyMultipleServiceBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /*
 1. Find count of Objects available on a Device
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FindDevicesAndSensorsOnADeviceFlowTest {
 
     @Test
-    void findCountOfObjects() {
+    void findCountOfObjectsRequest() {
 
         int invokeId = 69;
         DeviceId deviceId = new DeviceId(8);
@@ -25,5 +26,16 @@ public class FindDevicesAndSensorsOnADeviceFlowTest {
 
         String expectedHexString = "810a001501040275450e0c020000081e094c19001f";
         assertEquals(expectedHexString, countOfObjectsAvailable.buildHexString());
+    }
+
+    @Test
+    void findCountOfObjectsResponse() {
+        String fullBacnetHexString = "810a0019010030450e0c020000081e294c39004e2201694f1f";
+        String apduHexString = "30450e0c020000081e294c39004e2201694f1f";
+        String serviceHexString = "0c020000081e294c39004e2201694f1f";
+        ReadPropertyMultipleService countOfObjectsResponse =  ReadPropertyMultipleService.parse(serviceHexString);
+        assertNotNull(countOfObjectsResponse);
+        DeviceId deviceId = new DeviceId(8);
+        assertEquals(deviceId, countOfObjectsResponse.getObjectId());
     }
 }
