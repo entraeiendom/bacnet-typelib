@@ -1,5 +1,7 @@
 package no.entra.bacnet.services;
 
+import no.entra.bacnet.error.ErrorClassType;
+import no.entra.bacnet.error.ErrorCodeType;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.properties.PropertyIdentifier;
 import org.junit.jupiter.api.Test;
@@ -7,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static no.entra.bacnet.objects.ObjectType.AnalogValue;
+import static no.entra.bacnet.services.ReadPropertyResultParser.ERROR_CLASS;
+import static no.entra.bacnet.services.ReadPropertyResultParser.ERROR_CODE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
@@ -66,5 +70,17 @@ class ReadPropertyResultParserTest {
         assertEquals(null, readPropertyResult.getArrayIndexNumber());
         assertEquals(PropertyIdentifier.Description, readPropertyResult.getPropertyIdentifier());
         assertEquals("FW Series Bacnet Device", readPropertyResult.getReadResult().get(PropertyIdentifier.Description));
+    }
+
+    @Test
+    void parseErrorObject() throws BacnetParserException {
+        String hexString = "29555e910291205f";
+        ReadPropertyResult readPropertyResult = ReadPropertyResultParser.parse(hexString);
+        assertNotNull(readPropertyResult);
+        assertTrue(readPropertyResult.isParsedOk());
+        Map<String, Enum> errorMap = (Map<String, Enum>) readPropertyResult.getReadResult().get(PropertyIdentifier.XxError);
+        assertNotNull(errorMap);
+        assertEquals(ErrorClassType.property, errorMap.get(ERROR_CLASS));
+        assertEquals(ErrorCodeType.UnknownProperty, errorMap.get(ERROR_CODE));
     }
 }

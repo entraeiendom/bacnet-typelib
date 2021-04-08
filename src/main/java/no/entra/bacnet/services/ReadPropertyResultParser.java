@@ -3,6 +3,8 @@ package no.entra.bacnet.services;
 import no.entra.bacnet.apdu.ApplicationTag;
 import no.entra.bacnet.apdu.SDContextTag;
 import no.entra.bacnet.apdu.ValueType;
+import no.entra.bacnet.error.ErrorClassType;
+import no.entra.bacnet.error.ErrorCodeType;
 import no.entra.bacnet.mappers.MapperResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectIdMapper;
@@ -11,8 +13,10 @@ import no.entra.bacnet.octet.OctetReader;
 import no.entra.bacnet.properties.PropertyIdentifier;
 import org.slf4j.Logger;
 
-import static no.entra.bacnet.apdu.SDContextTag.TAG4START;
-import static no.entra.bacnet.apdu.SDContextTag.TAG5START;
+import java.util.HashMap;
+import java.util.Map;
+
+import static no.entra.bacnet.apdu.SDContextTag.*;
 import static no.entra.bacnet.mappers.StringMapper.parseCharStringExtended;
 import static no.entra.bacnet.utils.HexUtils.toInt;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -52,6 +56,8 @@ public class ReadPropertyResultParser {
     private static final Logger log = getLogger(ReadPropertyResultParser.class);
 
     public static final char ExtendedValue = '5';
+    public static final String ERROR_CODE = "ErrorCode";
+    public static final String ERROR_CLASS = "ErrorClass";
 
     public static ReadPropertyResult parse(String hexString) throws BacnetParserException {
         OctetReader propertyReader = new OctetReader(hexString);
@@ -111,11 +117,32 @@ public class ReadPropertyResultParser {
                 default:
                     throw new IllegalArgumentException("Not implemented yet, " + valueType);
             }
+            if (propertyReader.unprocessedHexString().startsWith(TAG4END.toString())) {
+                propertyReader.next();
+            }
             readPropertyResult.setUnparsedHexString(propertyReader.unprocessedHexString());
         } else if (readResultOctet.equals(TAG5START)) {
             //property-access-error
-            //FIXME Error handling on ReadPropertyMultiple
-            throw new IllegalArgumentException("Not implemented yet");
+            Octet applicationTagOctet = propertyReader.next();
+            ApplicationTag applicationTag = new ApplicationTag(applicationTagOctet);
+            if (applicationTag.findValueType().equals(ValueType.Enumerated)) {
+                Octet errorClassOctet = propertyReader.next();
+                ErrorClassType errorClass = ErrorClassType.fromChar(errorClassOctet.getSecondNibble());
+                Map<String, Enum> errorMap = new HashMap<>();
+                errorMap.put(ERROR_CLASS, errorClass);
+                readPropertyResult.addReadResult(PropertyIdentifier.XxError, errorMap);
+                applicationTagOctet = propertyReader.next();
+                applicationTag = new ApplicationTag(applicationTagOctet);
+                if (applicationTag.findValueType().equals(ValueType.Enumerated)) {
+                    Octet errorCodeOctet = propertyReader.next();
+                    ErrorCodeType errorCode = ErrorCodeType.fromOctet(errorCodeOctet);
+                    errorMap.put(ERROR_CODE, errorCode);
+                }
+                if (propertyReader.unprocessedHexString().startsWith(TAG5END.toString())) {
+                    propertyReader.next();
+                }
+                readPropertyResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+            }
         } else {
             readPropertyResult.setInitialHexString(hexString);
             readPropertyResult.setUnparsedHexString(propertyReader.unprocessedHexString());

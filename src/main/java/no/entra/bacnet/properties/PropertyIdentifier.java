@@ -459,7 +459,8 @@ public enum PropertyIdentifier {
     WriteStatus("172"),
     ZoneFrom("140"),
     ZoneMembers("a5"),
-    ZoneTo("141");
+    ZoneTo("141"),
+    XxError("fff");
 
     private String propertyIdentifierHex;
 
