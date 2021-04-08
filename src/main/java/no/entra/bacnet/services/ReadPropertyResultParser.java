@@ -3,16 +3,19 @@ package no.entra.bacnet.services;
 import no.entra.bacnet.apdu.ApplicationTag;
 import no.entra.bacnet.apdu.SDContextTag;
 import no.entra.bacnet.apdu.ValueType;
+import no.entra.bacnet.mappers.MapperResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectIdMapper;
-import no.entra.bacnet.objects.ObjectIdMapperResult;
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.octet.OctetReader;
 import no.entra.bacnet.properties.PropertyIdentifier;
+import org.slf4j.Logger;
 
 import static no.entra.bacnet.apdu.SDContextTag.TAG4START;
 import static no.entra.bacnet.apdu.SDContextTag.TAG5START;
+import static no.entra.bacnet.mappers.StringMapper.parseCharStringExtended;
 import static no.entra.bacnet.utils.HexUtils.toInt;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /*
 Structure
@@ -46,6 +49,9 @@ Error
   HexString: 29555e910291205f
  */
 public class ReadPropertyResultParser {
+    private static final Logger log = getLogger(ReadPropertyResultParser.class);
+
+    public static final char ExtendedValue = '5';
 
     public static ReadPropertyResult parse(String hexString) throws BacnetParserException {
         OctetReader propertyReader = new OctetReader(hexString);
@@ -56,7 +62,7 @@ public class ReadPropertyResultParser {
             throw new BacnetParserException("PropertyResult must start with SD-ContextTag 2. Value is: " + sdContextTag2, bacnetParserResult);
         }
         ReadPropertyResult readPropertyResult = null;
-        Octet propertyIdentifierOctet = propertyReader.next();
+        final Octet propertyIdentifierOctet = propertyReader.next();
         PropertyIdentifier propertyIdentifier = PropertyIdentifier.fromOctet(propertyIdentifierOctet);
         readPropertyResult = new ReadPropertyResult(propertyIdentifier);
 
@@ -76,7 +82,8 @@ public class ReadPropertyResultParser {
         Octet readResultOctet = propertyReader.next();
         //property-value
         if (readResultOctet.equals(TAG4START)) {
-            ApplicationTag applicationTag = new ApplicationTag(propertyReader.next());
+            Octet applicationTagOctet = propertyReader.next();
+            ApplicationTag applicationTag = new ApplicationTag(applicationTagOctet);
             Object value = null;
 
             ValueType valueType = applicationTag.findValueType();
@@ -85,17 +92,26 @@ public class ReadPropertyResultParser {
                 case Integer:
                     int length = applicationTag.findLength();
                     value = toInt(propertyReader.nextOctets(length));
-                    readPropertyResult.addReadResult(propertyIdentifier.name(), value);
+                    readPropertyResult.addReadResult(propertyIdentifier, value);
                     break;
                 case ObjectIdentifier:
-                    String objectIdHexString = propertyReader.next(4);
-                    ObjectIdMapperResult<ObjectId> idResult = ObjectIdMapper.parse(objectIdHexString);
+                    final String objectIdHexString = propertyReader.next(4);
+                    MapperResult<ObjectId> idResult = ObjectIdMapper.parse(objectIdHexString);
                     ObjectId propertyObjectId = idResult.getParsedObject();
-                    readPropertyResult.addReadResult("objectId", propertyObjectId);
+                    readPropertyResult.addReadResult(propertyIdentifier, propertyObjectId);
+                    break;
+                case CharString:
+                    if (applicationTagOctet.getSecondNibble() == '5') {
+                        MapperResult<String> stringResult = parseCharStringExtended(propertyReader.unprocessedHexString());
+                        String text = stringResult.getParsedObject();
+                        readPropertyResult.addReadResult(propertyIdentifier, text);
+                        propertyReader.next(stringResult.getNumberOfOctetsRead());
+                    }
                     break;
                 default:
                     throw new IllegalArgumentException("Not implemented yet, " + valueType);
             }
+            readPropertyResult.setUnparsedHexString(propertyReader.unprocessedHexString());
         } else if (readResultOctet.equals(TAG5START)) {
             //property-access-error
             //FIXME Error handling on ReadPropertyMultiple
@@ -103,7 +119,7 @@ public class ReadPropertyResultParser {
         } else {
             readPropertyResult.setInitialHexString(hexString);
             readPropertyResult.setUnparsedHexString(propertyReader.unprocessedHexString());
-            String errorMessage = "Could not deterimine how to parse \"read-result\" starting with octet " + readResultOctet;
+            String errorMessage = "Could not determine how to parse \"read-result\" starting with octet " + readResultOctet;
             readPropertyResult.setErrorMessage(errorMessage);
             readPropertyResult.setParsedOk(false);
             throw new BacnetParserException(errorMessage, readPropertyResult);

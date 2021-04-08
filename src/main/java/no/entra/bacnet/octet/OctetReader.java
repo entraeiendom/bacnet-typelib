@@ -25,6 +25,7 @@ public class OctetReader {
     public OctetReader(String hexString) throws IllegalArgumentException {
         if (isValidHex(hexString)) {
             this.hexString = hexString;
+            this.currentPos = 0;
         } else {
             throw new IllegalArgumentException("HexString may only contain 0-9a-f.");
         }

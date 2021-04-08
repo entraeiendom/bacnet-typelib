@@ -16,15 +16,15 @@ import java.util.Map;
  */
 public class ReadPropertyResult extends BacnetParserResult {
     private final PropertyIdentifier propertyIdentifier;
-    private int arrayIndexNumber;
-    private final Map<String, Object> readResult;
+    private Integer arrayIndexNumber = null;
+    private final Map<PropertyIdentifier, Object> readResult;
 
     public ReadPropertyResult(PropertyIdentifier propertyIdentifier) {
         this.propertyIdentifier = propertyIdentifier;
         readResult = new HashMap<>();
     }
 
-    public ReadPropertyResult(PropertyIdentifier propertyIdentifier, Map<String, Object> readResult) {
+    public ReadPropertyResult(PropertyIdentifier propertyIdentifier, Map<PropertyIdentifier, Object> readResult) {
         this.propertyIdentifier = propertyIdentifier;
         this.readResult = readResult;
     }
@@ -33,7 +33,7 @@ public class ReadPropertyResult extends BacnetParserResult {
         return propertyIdentifier;
     }
 
-    public int getArrayIndexNumber() {
+    public Integer getArrayIndexNumber() {
         return arrayIndexNumber;
     }
 
@@ -41,11 +41,11 @@ public class ReadPropertyResult extends BacnetParserResult {
         this.arrayIndexNumber = arrayIndexNumber;
     }
 
-    public Map<String, Object> getReadResult() {
+    public Map<PropertyIdentifier, Object> getReadResult() {
         return readResult;
     }
 
-    public void addReadResult(String key, Object value) {
+    public void addReadResult(PropertyIdentifier key, Object value) {
         readResult.put(key,value);
     }
 

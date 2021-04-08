@@ -3,9 +3,9 @@ package no.entra.bacnet.properties;
 import no.entra.bacnet.EntraUnknownOperationException;
 import no.entra.bacnet.apdu.PDTag;
 import no.entra.bacnet.apdu.SDContextTag;
+import no.entra.bacnet.mappers.MapperResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectIdMapper;
-import no.entra.bacnet.objects.ObjectIdMapperResult;
 import no.entra.bacnet.objects.Unit;
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.octet.OctetReader;
@@ -95,7 +95,7 @@ public class ReadAccessResult {
                 if (oidType.equals(new Octet(OBJECT_IDENTIFIER))) {
                     String objectIdString = "0c" + listReader.next(4);
                     log.debug("unprocessed before ObjectIdentifier {}", listReader.unprocessedHexString());
-                    ObjectIdMapperResult<ObjectId> objectIdResult = ObjectIdMapper.parse(objectIdString);
+                    MapperResult<ObjectId> objectIdResult = ObjectIdMapper.parse(objectIdString);
                     ObjectId objectIdentifier = objectIdResult.getParsedObject();
                     accessResult = new ReadAccessResult(objectIdentifier);
                 }

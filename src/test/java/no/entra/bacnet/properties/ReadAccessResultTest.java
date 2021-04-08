@@ -2,9 +2,9 @@ package no.entra.bacnet.properties;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import no.entra.bacnet.mappers.MapperResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectIdMapper;
-import no.entra.bacnet.objects.ObjectIdMapperResult;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class ReadAccessResultTest {
 
     @BeforeEach
     void setUp() {
-        ObjectIdMapperResult<ObjectId> result = ObjectIdMapper.parse(objectIdString);
+        MapperResult<ObjectId> result = ObjectIdMapper.parse(objectIdString);
         objectId = result.getParsedObject();
         accessResult = new ReadAccessResult(objectId);
         accessResult.setResultByKey(PresentValue, Double.valueOf(22.567));
