@@ -1,13 +1,13 @@
 package no.entra.bacnet.services;
 
 import no.entra.bacnet.objects.ObjectId;
-import no.entra.bacnet.objects.ObjectType;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static no.entra.bacnet.objects.ObjectType.AnalogValue;
+import static org.junit.jupiter.api.Assertions.*;
+
 /*
 Structure
 Array
@@ -47,10 +47,13 @@ class ReadPropertyResultParserTest {
         ReadPropertyResult readPropertyResult = ReadPropertyResultParser.parse(hexString);
         assertNotNull(readPropertyResult);
         assertEquals(2, readPropertyResult.getArrayIndexNumber());
-        ObjectId expectedObjectId = new ObjectId(ObjectType.AnalogValue, 0);
+        ObjectId expectedObjectId = new ObjectId(AnalogValue, 0);
         Map<String, Object> readResult = readPropertyResult.getReadResult();
-        Object objectId = readResult.get("objectId");
+        ObjectId objectId = (ObjectId) readResult.get("objectId");
         assertEquals(expectedObjectId, objectId);
+        assertEquals(0, objectId.getInstanceNumber());
+        assertEquals(AnalogValue, objectId.getObjectType());
+        assertTrue(readPropertyResult.isParsedOk());
     }
 
     @Test
