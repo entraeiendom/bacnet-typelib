@@ -16,9 +16,7 @@ import no.entra.bacnet.properties.PropertyIdentifier;
 import no.entra.bacnet.properties.PropertyReference;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static no.entra.bacnet.apdu.ArrayTag.ARRAY1_END;
@@ -36,7 +34,7 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
     private Set<ObjectProperties> objectProperties = null;
     private ObjectId objectId = null;
     private Set<PropertyReference> propertyReferences = null;
-    private List<ObjectId> propertyListResponse = null;
+    private ReadPropertyMultipleResponse readPropertyMultipleResponse = null;
 
 
     public ReadPropertyMultipleService() {
@@ -74,6 +72,13 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
         this.propertyReferences = propertyReferences;
     }
 
+    public ReadPropertyMultipleResponse getReadPropertyMultipleResponse() {
+        return readPropertyMultipleResponse;
+    }
+
+    public void setReadPropertyMultipleResponse(ReadPropertyMultipleResponse readPropertyMultipleResponse) {
+        this.readPropertyMultipleResponse = readPropertyMultipleResponse;
+    }
     // List of:
     // ObjectId
     // List of PropertyIdentifier or PropertyReference
@@ -179,7 +184,7 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
                                 //TODO
                                 ObjectIdMapperResult<ObjectId> idResult = ObjectIdMapper.parse(listReader.next(5));
                                 ObjectId propertyObjectId = idResult.getParsedObject();
-                                service.addPropertyResponse(objectId);
+//                                TODO service.addPropertyResponse(objectId);
                                 break;
                             default:
                                 throw new IllegalArgumentException("Not implemented yet, " + valueType);
@@ -211,16 +216,7 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
         return service;
     }
 
-    private void addPropertyResponse(ObjectId objectId) {
-        if (propertyListResponse == null) {
-            propertyListResponse = new ArrayList<>();
-        }
-        propertyListResponse.add(objectId);
-    }
 
-    public List<ObjectId> getPropertyListResponse() {
-        return propertyListResponse;
-    }
 
     private void addObjectProperty(ObjectProperties objectProperty) {
         if (objectProperties == null) {

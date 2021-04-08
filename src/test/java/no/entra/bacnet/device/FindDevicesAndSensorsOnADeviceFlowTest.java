@@ -1,6 +1,5 @@
 package no.entra.bacnet.device;
 
-import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectProperties;
 import no.entra.bacnet.properties.PropertyIdentifier;
 import no.entra.bacnet.properties.PropertyReference;
@@ -10,8 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
 1. Find count of Objects available on a Device
@@ -25,7 +23,7 @@ public class FindDevicesAndSensorsOnADeviceFlowTest {
 
     @Test
     void findCountOfObjectsRequest() {
-
+        //1. Find count of Objects available on a Device
         int invokeId = 69;
         DeviceId deviceId = new DeviceId(8);
         ReadPropertyMultipleService countOfObjectsAvailable = new ReadPropertyMultipleServiceBuilder(invokeId).findCountOfAvailableObjectsOnDevice(deviceId).build();
@@ -36,6 +34,7 @@ public class FindDevicesAndSensorsOnADeviceFlowTest {
 
     @Test
     void findCountOfObjectsResponse() {
+        //2. Receive count
         String fullBacnetHexString = "810a0019010030450e0c020000081e294c39004e2201694f1f";
         String apduHexString = "30450e0c020000081e294c39004e2201694f1f";
         String serviceHexString = "0c020000081e294c39004e2201694f1f";
@@ -55,7 +54,7 @@ public class FindDevicesAndSensorsOnADeviceFlowTest {
 
     @Test
     void findPropertyIdentifiersOnDeviceRequest() {
-        //Find PropertyIdentifiers for every Device, Sensor or Actuator in ObjectList
+        //3. Find PropertyIdentifiers for every Device, Sensor or Actuator in ObjectList
         int invokeId = 70;
         DeviceId deviceId = new DeviceId(8);
         List<Integer> objectListElements = new ArrayList<>();
@@ -82,15 +81,17 @@ public class FindDevicesAndSensorsOnADeviceFlowTest {
 
     @Test
     void findPropertyIdentifiersOnDevice() {
+        //4. Receive PropertyIdentifiers from ObjectList - and potentially loop
         String singleDevicePropertyHexString = "0c020000081e294c39014ec4020000084f1f";
         ReadPropertyMultipleService countOfObjectsResponse = ReadPropertyMultipleService.parse(singleDevicePropertyHexString);
         assertNotNull(countOfObjectsResponse);
         DeviceId deviceId = new DeviceId(8);
         assertEquals(deviceId, countOfObjectsResponse.getObjectId());
-       List<ObjectId> deviceProperties = countOfObjectsResponse.getPropertyListResponse();
+        fail(); //FIXME
+//       List<ObjectId> deviceProperties = countOfObjectsResponse.getPropertyListResponse();
 //       ai
-        assertNotNull(deviceProperties);
-        assertEquals(1, deviceProperties.size());
+//        assertNotNull(deviceProperties);
+//        assertEquals(1, deviceProperties.size());
 //        ObjectProperties objectProperty = objectProperties.iterator().next();
 //        Set<PropertyIdentifier> propertyIdentifiers = objectProperty.getPropertyIdentifiers();
 //        assertEquals(PropertyIdentifier.ObjectList, propertyIdentifiers.iterator().next());
