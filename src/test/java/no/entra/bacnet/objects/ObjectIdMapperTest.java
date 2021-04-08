@@ -10,12 +10,12 @@ class ObjectIdMapperTest {
 
     @Test
     void parseDevice517() {
-        String device517 = "0c02000205";
+        String device517 = "02000205";
         ObjectIdMapperResult<ObjectId> result = ObjectIdMapper.parse(device517);
         assertNotNull(result);
         assertNotNull(result.getParsedObject());
         assertTrue(result.getParsedObject() instanceof ObjectId);
-        assertEquals(5, result.getNumberOfOctetsRead());
+        assertEquals(4, result.getNumberOfOctetsRead());
         assertEquals(ObjectType.Device, result.getParsedObject().getObjectType());
         assertEquals(517, result.getParsedObject().getInstanceNumber());
 
@@ -23,36 +23,36 @@ class ObjectIdMapperTest {
 
     @Test
     void parseDevice131109() {
-        String device131109 = "1c02020025";
+        String device131109 = "02020025";
         ObjectIdMapperResult<ObjectId> result = ObjectIdMapper.parse(device131109);
         assertNotNull(result);
         assertNotNull(result.getParsedObject());
         assertTrue(result.getParsedObject() instanceof ObjectId);
-        assertEquals(5, result.getNumberOfOctetsRead());
+        assertEquals(4, result.getNumberOfOctetsRead());
         assertEquals(ObjectType.Device, result.getParsedObject().getObjectType());
         assertEquals(131109, result.getParsedObject().getInstanceNumber());
     }
 
     @Test
     void parseDevice1001() {
-        String device1001 = "1c020003e9";
+        String device1001 = "020003e9";
         ObjectIdMapperResult<ObjectId> result = ObjectIdMapper.parse(device1001);
         assertNotNull(result);
         assertNotNull(result.getParsedObject());
         assertTrue(result.getParsedObject() instanceof ObjectId);
-        assertEquals(5, result.getNumberOfOctetsRead());
+        assertEquals(4, result.getNumberOfOctetsRead());
         assertEquals(ObjectType.Device, result.getParsedObject().getObjectType());
         assertEquals(1001, result.getParsedObject().getInstanceNumber());
     }
 
     @Test
     void parseAnalogInput0() {
-        String device131109 = "2c00000000";
+        String device131109 = "00000000";
         ObjectIdMapperResult<ObjectId> result = ObjectIdMapper.parse(device131109);
         assertNotNull(result);
         assertNotNull(result.getParsedObject());
         assertTrue(result.getParsedObject() instanceof ObjectId);
-        assertEquals(5, result.getNumberOfOctetsRead());
+        assertEquals(4, result.getNumberOfOctetsRead());
         assertEquals(ObjectType.AnalogInput, result.getParsedObject().getObjectType());
         assertEquals(0, result.getParsedObject().getInstanceNumber());
     }
@@ -73,7 +73,7 @@ class ObjectIdMapperTest {
 
     @Test
     void validObjectIdTest() {
-        String objectIdHexString = "0c02000204";
+        String objectIdHexString = "02000204";
         ObjectIdMapperResult<ObjectId> objectIdResult = ObjectIdMapper.parse(objectIdHexString);
         assertNotNull(objectIdResult);
         assertEquals("Device", objectIdResult.getParsedObject().getObjectType().toString());
@@ -110,6 +110,21 @@ class ObjectIdMapperTest {
         String hexString = ObjectIdMapper.toHexString(objectId);
         //TrendLog = int 20 = bits? = hex?
         assertEquals("05000001", hexString);
+    }
+
+    @Test
+    void testAnalogValue0() {
+        String hexString = "00800000";
+        ObjectIdMapperResult<ObjectId> result = ObjectIdMapper.parse(hexString);
+        ObjectId objectId = result.getParsedObject();
+        assertNotNull(objectId);
+        ObjectId expectedId = new ObjectId(AnalogValue,0);
+        assertEquals(expectedId, objectId);
+        String expectedAsHexString = ObjectIdMapper.toHexString(expectedId);
+        assertEquals(hexString, expectedAsHexString);
+        expectedId = new ObjectId(Device,8);
+        expectedAsHexString = ObjectIdMapper.toHexString(expectedId);
+        assertEquals("02000008", expectedAsHexString);
     }
 
     @Test

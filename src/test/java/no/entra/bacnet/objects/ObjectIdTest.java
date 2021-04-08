@@ -11,7 +11,7 @@ class ObjectIdTest {
 
     @Test
     void parseTest() {
-        String idHexString = "0c002dc6ef";
+        String idHexString = "002dc6ef";
         ObjectIdMapperResult<ObjectId> result = ObjectIdMapper.parse(idHexString);
         ObjectId objectId = result.getParsedObject();
         assertNotNull(objectId);

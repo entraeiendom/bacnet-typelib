@@ -132,12 +132,15 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
         //Expect
         //ObjectId
         //List of PropertyReferences
-        ObjectIdMapperResult<ObjectId> idMapperResult = ObjectIdMapper.parse(hexString);
+        OctetReader listReader = new OctetReader(hexString);
+        listReader.next();
+        String idHexString = listReader.next(4);
+        ObjectIdMapperResult<ObjectId> idMapperResult = ObjectIdMapper.parse(idHexString);
         ReadPropertyMultipleService service = new ReadPropertyMultipleService();
         ObjectId objectId = idMapperResult.getParsedObject();
         int numberOfOctetsRead = idMapperResult.getNumberOfOctetsRead();
-        OctetReader listReader = new OctetReader(hexString);
-        listReader.next(numberOfOctetsRead); //Discard
+
+//        listReader.next(numberOfOctetsRead); //Discard
         Octet startList = listReader.next();
         if (startList.equals(ARRAY1_START)) {
             //PropertyReference/ObjectList

@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReadAccessResultTest {
 
     private ReadAccessResult accessResult;
-    private String objectIdString = "0c002dc6ef";
+    private String objectIdString = "002dc6ef";
     private ObjectId objectId;
     private Gson gson;
 

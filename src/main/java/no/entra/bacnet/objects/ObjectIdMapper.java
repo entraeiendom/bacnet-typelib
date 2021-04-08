@@ -15,16 +15,15 @@ public class ObjectIdMapper {
     //22 bits for Instance Number
 
     /**
-     * @param hexString 4 or 5 octets
+     * @param hexString 4 octets
      * @return ObjectId and count octets read
      */
     public static ObjectIdMapperResult<no.entra.bacnet.objects.ObjectId> parse(String hexString) {
         no.entra.bacnet.objects.ObjectId objectId = null;
         OctetReader idReader = new OctetReader(hexString);
-        Octet contextTag0 = idReader.next();
         Octet[] typeAndInstanceOctets = idReader.nextOctets(4);
         objectId = decode4Octets(typeAndInstanceOctets);
-        ObjectIdMapperResult result = new ObjectIdMapperResult(objectId, 5);
+        ObjectIdMapperResult result = new ObjectIdMapperResult(objectId, 4);
 
         return result;
     }

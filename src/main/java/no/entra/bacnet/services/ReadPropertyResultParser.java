@@ -88,7 +88,8 @@ public class ReadPropertyResultParser {
                     readPropertyResult.addReadResult(propertyIdentifier.name(), value);
                     break;
                 case ObjectIdentifier:
-                    ObjectIdMapperResult<ObjectId> idResult = ObjectIdMapper.parse(propertyReader.next(5));
+                    String objectIdHexString = propertyReader.next(4);
+                    ObjectIdMapperResult<ObjectId> idResult = ObjectIdMapper.parse(objectIdHexString);
                     ObjectId propertyObjectId = idResult.getParsedObject();
                     readPropertyResult.addReadResult("objectId", propertyObjectId);
                     break;
