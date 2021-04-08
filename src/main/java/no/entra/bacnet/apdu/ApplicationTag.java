@@ -20,15 +20,20 @@ public class ApplicationTag {
         this.appliationTag = appliationTag;
     }
 
-    public int findType() {
+    public ValueType findValueType() {
+        return ValueType.fromChar(appliationTag.getFirstNibble());
+
+        /*
         int enumeration = -1;
         char nibble = appliationTag.getFirstNibble();
         try {
            enumeration = Character.getNumericValue(nibble);
         } catch (NumberFormatException e) {
-            log.trace("Could not find integer from {}. Expected 0-9", nibble);
+            log.trace("Could not find integer from {}. Expected 0-12", nibble);
         }
         return enumeration;
+
+         */
     }
 
     public int findLength() {
