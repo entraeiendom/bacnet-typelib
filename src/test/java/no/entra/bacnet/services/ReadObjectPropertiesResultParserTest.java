@@ -102,7 +102,7 @@ With Array
     }
   ]
 }
-HexString: 30460e0c020000081e294c39014ec4020000084f294c39024ec4008000004f294c39034e1f
+HexString: 0c020000081e294c39014ec4020000084f294c39024ec4008000004f294c39034e1f
  */
 class ReadObjectPropertiesResultParserTest {
 
@@ -142,14 +142,32 @@ class ReadObjectPropertiesResultParserTest {
         assertEquals("FW Series Bacnet Device", resultList.get(1).getReadResult().get(PropertyIdentifier.Description));
         assertNotNull(resultList.get(2).getReadResult().get(PropertyIdentifier.XxError));
         assertNotNull(resultList.get(3).getReadResult().get(PropertyIdentifier.XxError));
-//        assertEquals(Float.parseFloat("22.3999862670898"), resultList.get(3).getReadResult().get(PropertyIdentifier.PresentValue));
+    }
+
+    @Test
+    void parsePropertiesWithArray() throws BacnetParserException {
+        String hexString = "0c020000081e294c39014ec4020000084f294c39024ec4008000004f294c39031f";
+        ParserResult<ReadObjectPropertiesResult> parserResult = ReadObjectPropertiesResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        ReadObjectPropertiesResult propertiesResult = parserResult.getParsedObject();
+        assertNotNull(propertiesResult);
+        ObjectId objectId = new ObjectId(ObjectType.Device, 8);
+        assertEquals(objectId, propertiesResult.getObjectId());
+        List<ReadPropertyResult> resultList = propertiesResult.getResults();
+        assertNotNull(resultList);
+        assertEquals(2, resultList.size());
+        assertEquals(1, resultList.get(0).getArrayIndexNumber());
+        ObjectId expectedObjectId = new ObjectId(ObjectType.Device, 8);
+        assertEquals(expectedObjectId, resultList.get(0).getReadResult().get(PropertyIdentifier.ObjectList));
+        assertEquals(2, resultList.get(1).getArrayIndexNumber());
+        expectedObjectId = new ObjectId(ObjectType.AnalogValue, 0);
+        assertEquals(expectedObjectId, resultList.get(1).getReadResult().get(PropertyIdentifier.ObjectList));
     }
 
     @Test
     void unparsableHexString() {
         String hexString = "0000";
-        assertThrows(BacnetParserException.class, () -> {
-            ReadObjectPropertiesResultParser.parse(hexString);
-        });
+        assertThrows(BacnetParserException.class, () -> ReadObjectPropertiesResultParser.parse(hexString));
     }
 }
