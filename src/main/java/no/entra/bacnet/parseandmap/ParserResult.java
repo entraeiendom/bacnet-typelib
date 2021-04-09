@@ -37,6 +37,11 @@ public class ParserResult<T> {
     }
 
     public int getNumberOfOctetsRead() {
+        if (numberOfOctetsRead < 0) {
+            if (initialHexString != null && unparsedHexString != null) {
+                return (initialHexString.length() - unparsedHexString.length())/2;
+            }
+        }
         return numberOfOctetsRead;
     }
 
