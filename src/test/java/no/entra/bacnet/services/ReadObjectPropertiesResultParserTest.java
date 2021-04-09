@@ -1,6 +1,11 @@
 package no.entra.bacnet.services;
 
+import no.entra.bacnet.objects.ObjectId;
+import no.entra.bacnet.objects.ObjectType;
+import no.entra.bacnet.parseandmap.ParserResult;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
 Single object multiple properties
@@ -89,6 +94,22 @@ HexString: 30460e0c020000081e294c39014ec4020000084f294c39024ec4008000004f294c390
 class ReadObjectPropertiesResultParserTest {
 
     @Test
-    void parse() {
+    void parse() throws BacnetParserException {
+        String hexString = "0c008000001e294d4e7514005549315f5a6f6e6554656d70657261747572654f291c4e750f00416e616c6f672056616c756520304f29754e915f4f29554e4441b3332c4f1f";
+        ParserResult<ReadObjectPropertiesResult> parserResult = ReadObjectPropertiesResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        ReadObjectPropertiesResult propertiesResult = parserResult.getParsedObject();
+        assertNotNull(propertiesResult);
+        ObjectId objectId = new ObjectId(ObjectType.AnalogValue, 0);
+        assertEquals(objectId, propertiesResult.getObjectId());
+    }
+
+    @Test
+    void unparsableHexString() {
+        String hexString = "0000";
+        assertThrows(BacnetParserException.class, () -> {
+            ReadObjectPropertiesResultParser.parse(hexString);
+        });
     }
 }
