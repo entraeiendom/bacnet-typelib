@@ -44,6 +44,23 @@ Error
     }
   }
   HexString: 29555e910291205f
+
+Enumerated - units
+  {
+    "property-identifier": "units",
+    "read-result": {
+      "units": "No Units"
+    }
+  }
+  HexString: 29754e915f4f
+Present Value
+ {
+   "property-identifier": "present-value",
+   "read-result": {
+     "present-value": 22.3999862670898
+   }
+ }
+  HexString: 29554e4441b3332c4f
  */
 class ReadPropertyResultParserTest {
 
@@ -87,5 +104,16 @@ class ReadPropertyResultParserTest {
         assertNotNull(errorMap);
         assertEquals(ErrorClassType.property, errorMap.get(ERROR_CLASS));
         assertEquals(ErrorCodeType.UnknownProperty, errorMap.get(ERROR_CODE));
+    }
+
+    @Test
+    void presentValue() throws BacnetParserException {
+        String hexString = "29554e4441b3332c4f";
+        ParserResult<ReadPropertyResult> parserResult = ReadPropertyResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        ReadPropertyResult readPropertyResult = parserResult.getParsedObject();
+        assertEquals(PropertyIdentifier.PresentValue, readPropertyResult.getPropertyIdentifier());
+        assertEquals(Float.parseFloat("22.3999862670898"), readPropertyResult.getReadResult().get(PropertyIdentifier.PresentValue));
     }
 }

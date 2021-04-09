@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static no.entra.bacnet.apdu.SDContextTag.*;
 import static no.entra.bacnet.parseandmap.StringParser.parseCharStringExtended;
+import static no.entra.bacnet.utils.HexUtils.toFloat;
 import static no.entra.bacnet.utils.HexUtils.toInt;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -98,9 +99,14 @@ public class ReadPropertyResultParser {
 
             ValueType valueType = applicationTag.findValueType();
             switch (valueType) {
+                case Float:
+                    int length = applicationTag.findLength();
+                    value = toFloat(propertyReader.next(length));
+                    readPropertyResult.addReadResult(propertyIdentifier, value);
+                    break;
                 case Long:
                 case Integer:
-                    int length = applicationTag.findLength();
+                    length = applicationTag.findLength();
                     value = toInt(propertyReader.nextOctets(length));
                     readPropertyResult.addReadResult(propertyIdentifier, value);
                     break;
@@ -118,6 +124,8 @@ public class ReadPropertyResultParser {
                         propertyReader.next(stringResult.getNumberOfOctetsRead());
                     }
                     break;
+                case Enumerated:
+                    String apll = applicationTag.toString();
                 default:
                     throw new IllegalArgumentException("Not implemented yet, " + valueType);
             }
