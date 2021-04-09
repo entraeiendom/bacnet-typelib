@@ -1,7 +1,7 @@
 package no.entra.bacnet.objects;
 
-import no.entra.bacnet.mappers.MapperResult;
 import no.entra.bacnet.octet.OctetReader;
+import no.entra.bacnet.parseandmap.ParserResult;
 import org.junit.jupiter.api.Test;
 
 import static no.entra.bacnet.objects.ObjectType.*;
@@ -12,7 +12,7 @@ class ObjectIdMapperTest {
     @Test
     void parseDevice517() {
         String device517 = "02000205";
-        MapperResult<ObjectId> result = ObjectIdMapper.parse(device517);
+        ParserResult<ObjectId> result = ObjectIdMapper.parse(device517);
         assertNotNull(result);
         assertNotNull(result.getParsedObject());
         assertTrue(result.getParsedObject() instanceof ObjectId);
@@ -25,7 +25,7 @@ class ObjectIdMapperTest {
     @Test
     void parseDevice131109() {
         String device131109 = "02020025";
-        MapperResult<ObjectId> result = ObjectIdMapper.parse(device131109);
+        ParserResult<ObjectId> result = ObjectIdMapper.parse(device131109);
         assertNotNull(result);
         assertNotNull(result.getParsedObject());
         assertTrue(result.getParsedObject() instanceof ObjectId);
@@ -37,7 +37,7 @@ class ObjectIdMapperTest {
     @Test
     void parseDevice1001() {
         String device1001 = "020003e9";
-        MapperResult<ObjectId> result = ObjectIdMapper.parse(device1001);
+        ParserResult<ObjectId> result = ObjectIdMapper.parse(device1001);
         assertNotNull(result);
         assertNotNull(result.getParsedObject());
         assertTrue(result.getParsedObject() instanceof ObjectId);
@@ -49,7 +49,7 @@ class ObjectIdMapperTest {
     @Test
     void parseAnalogInput0() {
         String device131109 = "00000000";
-        MapperResult<ObjectId> result = ObjectIdMapper.parse(device131109);
+        ParserResult<ObjectId> result = ObjectIdMapper.parse(device131109);
         assertNotNull(result);
         assertNotNull(result.getParsedObject());
         assertTrue(result.getParsedObject() instanceof ObjectId);
@@ -75,7 +75,7 @@ class ObjectIdMapperTest {
     @Test
     void validObjectIdTest() {
         String objectIdHexString = "02000204";
-        MapperResult<ObjectId> objectIdResult = ObjectIdMapper.parse(objectIdHexString);
+        ParserResult<ObjectId> objectIdResult = ObjectIdMapper.parse(objectIdHexString);
         assertNotNull(objectIdResult);
         assertEquals("Device", objectIdResult.getParsedObject().getObjectType().toString());
         assertEquals(516, objectIdResult.getParsedObject().getInstanceNumber());
@@ -116,7 +116,7 @@ class ObjectIdMapperTest {
     @Test
     void testAnalogValue0() {
         String hexString = "00800000";
-        MapperResult<ObjectId> result = ObjectIdMapper.parse(hexString);
+        ParserResult<ObjectId> result = ObjectIdMapper.parse(hexString);
         ObjectId objectId = result.getParsedObject();
         assertNotNull(objectId);
         ObjectId expectedId = new ObjectId(AnalogValue,0);

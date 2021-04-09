@@ -1,6 +1,6 @@
 package no.entra.bacnet.objects;
 
-import no.entra.bacnet.mappers.MapperResult;
+import no.entra.bacnet.parseandmap.ParserResult;
 import org.junit.jupiter.api.Test;
 
 import static no.entra.bacnet.objects.ObjectType.AnalogInput;
@@ -13,7 +13,7 @@ class ObjectIdTest {
     @Test
     void parseTest() {
         String idHexString = "002dc6ef";
-        MapperResult<ObjectId> result = ObjectIdMapper.parse(idHexString);
+        ParserResult<ObjectId> result = ObjectIdMapper.parse(idHexString);
         ObjectId objectId = result.getParsedObject();
         assertNotNull(objectId);
         assertEquals(AnalogInput, objectId.getObjectType());

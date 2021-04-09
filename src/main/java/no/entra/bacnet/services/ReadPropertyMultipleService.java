@@ -4,7 +4,6 @@ import no.entra.bacnet.apdu.*;
 import no.entra.bacnet.bvlc.Bvlc;
 import no.entra.bacnet.bvlc.BvlcBuilder;
 import no.entra.bacnet.bvlc.BvlcFunction;
-import no.entra.bacnet.mappers.MapperResult;
 import no.entra.bacnet.npdu.Npdu;
 import no.entra.bacnet.npdu.NpduBuilder;
 import no.entra.bacnet.objects.ObjectId;
@@ -12,6 +11,7 @@ import no.entra.bacnet.objects.ObjectIdMapper;
 import no.entra.bacnet.objects.ObjectProperties;
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.octet.OctetReader;
+import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.properties.PropertyIdentifier;
 import no.entra.bacnet.properties.PropertyReference;
 import org.slf4j.Logger;
@@ -135,7 +135,7 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
         OctetReader listReader = new OctetReader(hexString);
         listReader.next();
         String idHexString = listReader.next(4);
-        MapperResult<ObjectId> idMapperResult = ObjectIdMapper.parse(idHexString);
+        ParserResult<ObjectId> idMapperResult = ObjectIdMapper.parse(idHexString);
         ReadPropertyMultipleService service = new ReadPropertyMultipleService();
         ObjectId objectId = idMapperResult.getParsedObject();
         int numberOfOctetsRead = idMapperResult.getNumberOfOctetsRead();
@@ -185,7 +185,7 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
                                 break;
                             case ObjectIdentifier:
                                 //TODO
-                                MapperResult<ObjectId> idResult = ObjectIdMapper.parse(listReader.next(5));
+                                ParserResult<ObjectId> idResult = ObjectIdMapper.parse(listReader.next(5));
                                 ObjectId propertyObjectId = idResult.getParsedObject();
 //                                TODO service.addPropertyResponse(objectId);
                                 break;

@@ -1,4 +1,4 @@
-package no.entra.bacnet.mappers;
+package no.entra.bacnet.parseandmap;
 
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.octet.OctetReader;
@@ -8,10 +8,10 @@ import org.slf4j.Logger;
 import static java.lang.Integer.parseInt;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class StringMapper {
-    private static final Logger log = getLogger(StringMapper.class);
+public class StringParser {
+    private static final Logger log = getLogger(StringParser.class);
 
-    public static MapperResult<String> parseCharStringExtended(String hexString) {
+    public static ParserResult<String> parseCharStringExtended(String hexString) {
         log.debug("Find Text from: {}", hexString);
         OctetReader stringReader = new OctetReader(hexString);
         Octet valueLength = stringReader.next();
@@ -22,7 +22,7 @@ public class StringMapper {
         String text = HexUtils.parseExtendedValue(encoding, objectNameHex);
         log.debug("The rest: {}", stringReader.unprocessedHexString());
         int numberOfOctetsRead = valueOctetLength + 1;
-        MapperResult result = new MapperResult(text, numberOfOctetsRead);
+        ParserResult result = new ParserResult(text, numberOfOctetsRead);
         return result;
     }
 }

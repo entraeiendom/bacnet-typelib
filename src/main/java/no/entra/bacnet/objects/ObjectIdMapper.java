@@ -1,8 +1,8 @@
 package no.entra.bacnet.objects;
 
-import no.entra.bacnet.mappers.MapperResult;
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.octet.OctetReader;
+import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.utils.HexUtils;
 import org.slf4j.Logger;
 
@@ -19,12 +19,12 @@ public class ObjectIdMapper {
      * @param hexString 4 octets
      * @return ObjectId and count octets read
      */
-    public static MapperResult<ObjectId> parse(String hexString) {
+    public static ParserResult<ObjectId> parse(String hexString) {
         ObjectId objectId = null;
         final OctetReader idReaderr = new OctetReader(hexString);
         Octet[] typeAndInstanceOctets = idReaderr.nextOctets(4);
         objectId = decode4Octets(typeAndInstanceOctets);
-        MapperResult result = new MapperResult(objectId, 4);
+        ParserResult result = new ParserResult(objectId, 4);
 
         return result;
     }

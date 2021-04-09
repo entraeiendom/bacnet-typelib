@@ -5,11 +5,11 @@ import no.entra.bacnet.apdu.SDContextTag;
 import no.entra.bacnet.apdu.ValueType;
 import no.entra.bacnet.error.ErrorClassType;
 import no.entra.bacnet.error.ErrorCodeType;
-import no.entra.bacnet.mappers.MapperResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectIdMapper;
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.octet.OctetReader;
+import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.properties.PropertyIdentifier;
 import org.slf4j.Logger;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static no.entra.bacnet.apdu.SDContextTag.*;
-import static no.entra.bacnet.mappers.StringMapper.parseCharStringExtended;
+import static no.entra.bacnet.parseandmap.StringParser.parseCharStringExtended;
 import static no.entra.bacnet.utils.HexUtils.toInt;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -102,13 +102,13 @@ public class ReadPropertyResultParser {
                     break;
                 case ObjectIdentifier:
                     final String objectIdHexString = propertyReader.next(4);
-                    MapperResult<ObjectId> idResult = ObjectIdMapper.parse(objectIdHexString);
+                    ParserResult<ObjectId> idResult = ObjectIdMapper.parse(objectIdHexString);
                     ObjectId propertyObjectId = idResult.getParsedObject();
                     readPropertyResult.addReadResult(propertyIdentifier, propertyObjectId);
                     break;
                 case CharString:
                     if (applicationTagOctet.getSecondNibble() == '5') {
-                        MapperResult<String> stringResult = parseCharStringExtended(propertyReader.unprocessedHexString());
+                        ParserResult<String> stringResult = parseCharStringExtended(propertyReader.unprocessedHexString());
                         String text = stringResult.getParsedObject();
                         readPropertyResult.addReadResult(propertyIdentifier, text);
                         propertyReader.next(stringResult.getNumberOfOctetsRead());
