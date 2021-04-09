@@ -59,13 +59,17 @@ public class ReadPropertyResultParser {
     public static final String ERROR_CODE = "ErrorCode";
     public static final String ERROR_CLASS = "ErrorClass";
 
-    public static ReadPropertyResult parse(String hexString) throws BacnetParserException {
+    public static ParserResult<ReadPropertyResult> parse(String hexString) throws BacnetParserException {
+        ParserResult<ReadPropertyResult> parserResult = new ParserResult();
+        parserResult.setInitialHexString(hexString);
         OctetReader propertyReader = new OctetReader(hexString);
         //Expect PropertyReader to start with 29 - SD-ContextTag2-Length1
         Octet sdContextTag2 = propertyReader.next();
         if (!sdContextTag2.equals(SDContextTag.TAG2LENGTH1)) {
-            BacnetParserResult bacnetParserResult = new BacnetParserResult(hexString, propertyReader.unprocessedHexString(), "PropertyResult must start with SD-ContextTag 2. Value is: " + sdContextTag2);
-            throw new BacnetParserException("PropertyResult must start with SD-ContextTag 2. Value is: " + sdContextTag2, bacnetParserResult);
+            parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+            parserResult.setErrorMessage("PropertyResult must start with SD-ContextTag 2. Value is: " + sdContextTag2);
+            parserResult.setParsedOk(false);
+            throw new BacnetParserException("PropertyResult must start with SD-ContextTag 2. Value is: " + sdContextTag2, parserResult);
         }
         ReadPropertyResult readPropertyResult = null;
         final Octet propertyIdentifierOctet = propertyReader.next();
@@ -120,7 +124,7 @@ public class ReadPropertyResultParser {
             if (propertyReader.unprocessedHexString().startsWith(TAG4END.toString())) {
                 propertyReader.next();
             }
-            readPropertyResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+            parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
         } else if (readResultOctet.equals(TAG5START)) {
             //property-access-error
             Octet applicationTagOctet = propertyReader.next();
@@ -141,21 +145,23 @@ public class ReadPropertyResultParser {
                 if (propertyReader.unprocessedHexString().startsWith(TAG5END.toString())) {
                     propertyReader.next();
                 }
-                readPropertyResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+                parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
             }
         } else {
-            readPropertyResult.setInitialHexString(hexString);
-            readPropertyResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+//            readPropertyResult.setInitialHexString(hexString);
+            parserResult.setParsedObject(readPropertyResult);
+            parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
             String errorMessage = "Could not determine how to parse \"read-result\" starting with octet " + readResultOctet;
-            readPropertyResult.setErrorMessage(errorMessage);
-            readPropertyResult.setParsedOk(false);
-            throw new BacnetParserException(errorMessage, readPropertyResult);
+            parserResult.setErrorMessage(errorMessage);
+            parserResult.setParsedOk(false);
+            throw new BacnetParserException(errorMessage, parserResult);
         }
 
-        readPropertyResult.setInitialHexString(hexString);
-        readPropertyResult.setUnparsedHexString(propertyReader.unprocessedHexString());
-        readPropertyResult.setParsedOk(true);
+//        parserResult.setInitialHexString(hexString);
+        parserResult.setParsedObject(readPropertyResult);
+        parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+        parserResult.setParsedOk(true);
 
-        return readPropertyResult;
+        return parserResult;
     }
 }

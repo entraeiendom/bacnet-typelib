@@ -14,7 +14,7 @@ import java.util.Map;
   }
 }
  */
-public class ReadPropertyResult extends BacnetParserResult {
+public class ReadPropertyResult {
     private final PropertyIdentifier propertyIdentifier;
     private Integer arrayIndexNumber = null;
     private final Map<PropertyIdentifier, Object> readResult;

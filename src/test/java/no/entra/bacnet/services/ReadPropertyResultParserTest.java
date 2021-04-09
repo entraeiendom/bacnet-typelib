@@ -3,6 +3,7 @@ package no.entra.bacnet.services;
 import no.entra.bacnet.error.ErrorClassType;
 import no.entra.bacnet.error.ErrorCodeType;
 import no.entra.bacnet.objects.ObjectId;
+import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.properties.PropertyIdentifier;
 import org.junit.jupiter.api.Test;
 
@@ -49,8 +50,9 @@ class ReadPropertyResultParserTest {
     @Test
     void parseObjectList() throws BacnetParserException {
         String hexString = "294c39024ec4008000004f";
-        ReadPropertyResult readPropertyResult = ReadPropertyResultParser.parse(hexString);
-        assertNotNull(readPropertyResult);
+        ParserResult<ReadPropertyResult> parserResult = ReadPropertyResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        ReadPropertyResult readPropertyResult = parserResult.getParsedObject();
         assertEquals(2, readPropertyResult.getArrayIndexNumber());
         ObjectId expectedObjectId = new ObjectId(AnalogValue, 0);
         Map<PropertyIdentifier, Object> readResult = readPropertyResult.getReadResult();
@@ -58,15 +60,17 @@ class ReadPropertyResultParserTest {
         assertEquals(expectedObjectId, objectId);
         assertEquals(0, objectId.getInstanceNumber());
         assertEquals(AnalogValue, objectId.getObjectType());
-        assertTrue(readPropertyResult.isParsedOk());
+        assertTrue(parserResult.isParsedOk());
     }
 
     @Test
     void parseObjectProperty() throws BacnetParserException {
         String hexString = "291c4e751800465720536572696573204261636e6574204465766963654f";
-        ReadPropertyResult readPropertyResult = ReadPropertyResultParser.parse(hexString);
+        ParserResult<ReadPropertyResult> parserResult = ReadPropertyResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        ReadPropertyResult readPropertyResult = parserResult.getParsedObject();
         assertNotNull(readPropertyResult);
-        assertTrue(readPropertyResult.isParsedOk());
         assertEquals(null, readPropertyResult.getArrayIndexNumber());
         assertEquals(PropertyIdentifier.Description, readPropertyResult.getPropertyIdentifier());
         assertEquals("FW Series Bacnet Device", readPropertyResult.getReadResult().get(PropertyIdentifier.Description));
@@ -75,9 +79,10 @@ class ReadPropertyResultParserTest {
     @Test
     void parseErrorObject() throws BacnetParserException {
         String hexString = "29555e910291205f";
-        ReadPropertyResult readPropertyResult = ReadPropertyResultParser.parse(hexString);
-        assertNotNull(readPropertyResult);
-        assertTrue(readPropertyResult.isParsedOk());
+        ParserResult<ReadPropertyResult> parserResult = ReadPropertyResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        ReadPropertyResult readPropertyResult = parserResult.getParsedObject();
         Map<String, Enum> errorMap = (Map<String, Enum>) readPropertyResult.getReadResult().get(PropertyIdentifier.XxError);
         assertNotNull(errorMap);
         assertEquals(ErrorClassType.property, errorMap.get(ERROR_CLASS));
