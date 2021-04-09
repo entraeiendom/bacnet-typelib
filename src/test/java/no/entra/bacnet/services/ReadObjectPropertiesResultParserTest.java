@@ -1,8 +1,10 @@
 package no.entra.bacnet.services;
 
+import no.entra.bacnet.apdu.MeasurementUnit;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectType;
 import no.entra.bacnet.parseandmap.ParserResult;
+import no.entra.bacnet.properties.PropertyIdentifier;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -107,8 +109,11 @@ class ReadObjectPropertiesResultParserTest {
         assertEquals(objectId, propertiesResult.getObjectId());
         List<ReadPropertyResult> resultList = propertiesResult.getResults();
         assertNotNull(resultList);
-        assertEquals(2, resultList.size());
-
+        assertEquals(4, resultList.size());
+        assertEquals("UI1_ZoneTemperature", resultList.get(0).getReadResult().get(PropertyIdentifier.ObjectName));
+        assertEquals("Analog Value 0", resultList.get(1).getReadResult().get(PropertyIdentifier.Description));
+        assertEquals(MeasurementUnit.NoUnits, resultList.get(2).getReadResult().get(PropertyIdentifier.Units));
+        assertEquals(Float.parseFloat("22.3999862670898"), resultList.get(3).getReadResult().get(PropertyIdentifier.PresentValue));
     }
 
     @Test
