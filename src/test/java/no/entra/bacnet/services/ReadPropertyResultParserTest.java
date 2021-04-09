@@ -1,5 +1,6 @@
 package no.entra.bacnet.services;
 
+import no.entra.bacnet.apdu.MeasurementUnit;
 import no.entra.bacnet.error.ErrorClassType;
 import no.entra.bacnet.error.ErrorCodeType;
 import no.entra.bacnet.objects.ObjectId;
@@ -104,6 +105,17 @@ class ReadPropertyResultParserTest {
         assertNotNull(errorMap);
         assertEquals(ErrorClassType.property, errorMap.get(ERROR_CLASS));
         assertEquals(ErrorCodeType.UnknownProperty, errorMap.get(ERROR_CODE));
+    }
+
+    @Test
+    void units() throws BacnetParserException {
+        String hexString = "29754e915f4f";
+        ParserResult<ReadPropertyResult> parserResult = ReadPropertyResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        ReadPropertyResult readPropertyResult = parserResult.getParsedObject();
+        assertEquals(PropertyIdentifier.Units, readPropertyResult.getPropertyIdentifier());
+        assertEquals(MeasurementUnit.NoUnits, readPropertyResult.getReadResult().get(PropertyIdentifier.Units));
     }
 
     @Test

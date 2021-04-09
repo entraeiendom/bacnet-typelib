@@ -2,6 +2,7 @@ package no.entra.bacnet.objects;
 
 import no.entra.bacnet.octet.Octet;
 
+@Deprecated //Use MeasurementUnit
 public enum Unit {
     DegreesCelcius("3e");
     private String unitHex;

@@ -1,6 +1,7 @@
 package no.entra.bacnet.services;
 
 import no.entra.bacnet.apdu.ApplicationTag;
+import no.entra.bacnet.apdu.MeasurementUnit;
 import no.entra.bacnet.apdu.SDContextTag;
 import no.entra.bacnet.apdu.ValueType;
 import no.entra.bacnet.error.ErrorClassType;
@@ -125,7 +126,11 @@ public class ReadPropertyResultParser {
                     }
                     break;
                 case Enumerated:
-                    String apll = applicationTag.toString();
+                    length = applicationTag.findLength();
+                    Octet measurementUnitOctet = propertyReader.next();
+                    MeasurementUnit measurementUnit = MeasurementUnit.fromOctet(measurementUnitOctet);
+                    readPropertyResult.addReadResult(propertyIdentifier, measurementUnit);
+                    break;
                 default:
                     throw new IllegalArgumentException("Not implemented yet, " + valueType);
             }
