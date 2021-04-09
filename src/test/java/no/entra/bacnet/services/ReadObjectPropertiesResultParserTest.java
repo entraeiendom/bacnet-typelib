@@ -5,6 +5,8 @@ import no.entra.bacnet.objects.ObjectType;
 import no.entra.bacnet.parseandmap.ParserResult;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
@@ -103,6 +105,10 @@ class ReadObjectPropertiesResultParserTest {
         assertNotNull(propertiesResult);
         ObjectId objectId = new ObjectId(ObjectType.AnalogValue, 0);
         assertEquals(objectId, propertiesResult.getObjectId());
+        List<ReadPropertyResult> resultList = propertiesResult.getResults();
+        assertNotNull(resultList);
+        assertEquals(2, resultList.size());
+
     }
 
     @Test

@@ -7,10 +7,8 @@ import no.entra.bacnet.octet.OctetReader;
 import no.entra.bacnet.parseandmap.ParserResult;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static no.entra.bacnet.apdu.ArrayTag.ARRAY1_END;
+import static no.entra.bacnet.apdu.ArrayTag.ARRAY1_START;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /*
@@ -99,12 +97,13 @@ HexString: 30460e0c020000081e294c39014ec4020000084f294c39024ec4008000004f294c390
  */
 public class ReadObjectPropertiesResultParser {
     private static final Logger log = getLogger(ReadObjectPropertiesResultParser.class);
+
     public static ParserResult<ReadObjectPropertiesResult> parse(String hexString) throws BacnetParserException {
         ParserResult<ReadObjectPropertiesResult> parserResult = new ParserResult<>();
         ReadObjectPropertiesResult readObjectPropertiesResult = null;
         parserResult.setInitialHexString(hexString);
         ObjectId objectId = null;
-        List<ReadPropertyResult> readPropertyResults =  new ArrayList<>();
+//        List<ReadPropertyResult> readPropertyResults =  new ArrayList<>();
         OctetReader objectPropertiesReader = new OctetReader(hexString);
         if (!objectPropertiesReader.hasNext() || !objectPropertiesReader.next().equals(SDContextTag.TAG0LENGTH4)) {
             parserResult.setUnparsedHexString(objectPropertiesReader.unprocessedHexString());
@@ -119,28 +118,38 @@ public class ReadObjectPropertiesResultParser {
             readObjectPropertiesResult = new ReadObjectPropertiesResult(objectId);
             parserResult.setParsedObject(readObjectPropertiesResult);
 
-            int numberOfOctetsRead = objectIdResult.getNumberOfOctetsRead();
-            objectPropertiesReader.next(numberOfOctetsRead); //Discard and move pointer
-            while (objectPropertiesReader.hasNext()) {
-                try {
-                    String unprocessedHexString = objectPropertiesReader.unprocessedHexString();
-                    if (unprocessedHexString.startsWith(ARRAY1_END.toString())) {
+            int numberOfOctetsRead = 5;
+            if (objectPropertiesReader.next().equals(ARRAY1_START)) {
+                while (objectPropertiesReader.hasNext()) {
+                    try {
+                        String unprocessedHexString = objectPropertiesReader.unprocessedHexString();
+                        if (unprocessedHexString.startsWith(ARRAY1_END.toString())) {
+                            break;
+                        }
+                        ParserResult<ReadPropertyResult> propertyParserResult = ReadPropertyResultParser.parse(unprocessedHexString);
+                        if (parserResult.isParsedOk()) {
+                            readObjectPropertiesResult.addReadPropertyResult(propertyParserResult.getParsedObject());
+                            numberOfOctetsRead = propertyParserResult.getNumberOfOctetsRead();
+                            objectPropertiesReader.next(numberOfOctetsRead);
+                        }
+                    } catch (IllegalStateException e) {
+                        parserResult.setUnparsedHexString(objectPropertiesReader.unprocessedHexString());
+                        parserResult.setErrorMessage(e.getMessage());
+                        parserResult.setParsedOk(false);
+                        break;
+                    } catch (BacnetParserException e) {
+                        log.trace("Could not parse ReadObjectPropertiesResult from hexString: {}. Unparsed: {} ", hexString, e.getParserResult().getUnparsedHexString());
                         break;
                     }
-                    ParserResult<ReadPropertyResult> propertyParserResult = ReadPropertyResultParser.parse(unprocessedHexString);
-                    if (parserResult.isParsedOk()) {
-                        readPropertyResults.add(propertyParserResult.getParsedObject());
-                        numberOfOctetsRead = parserResult.getNumberOfOctetsRead();
-                        objectPropertiesReader.next(numberOfOctetsRead);
-                    }
-                } catch (BacnetParserException e) {
-                    log.trace("Could not parse ReadObjectPropertiesResult from hexString: {}. Unparsed: {} ", hexString, e.getParserResult().getUnparsedHexString());
-                    break;
                 }
+            } else {
+                parserResult.setParsedOk(false);
+                parserResult.setErrorMessage("Could not parse ObjectId");
+                parserResult.setUnparsedHexString(objectIdResult.getUnparsedHexString());
             }
         } else {
             parserResult.setParsedOk(false);
-            parserResult.setErrorMessage("Could not parse ObjectId");
+            parserResult.setErrorMessage("Missing array/sequence of ReadPropertyResult");
             parserResult.setUnparsedHexString(objectIdResult.getUnparsedHexString());
         }
         return parserResult;
