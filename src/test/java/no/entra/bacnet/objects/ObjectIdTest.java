@@ -1,7 +1,7 @@
 package no.entra.bacnet.objects;
 
 import no.entra.bacnet.internal.objects.ObjectIdMapper;
-import no.entra.bacnet.parseandmap.ParserResult;
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 import org.junit.jupiter.api.Test;
 
 import static no.entra.bacnet.objects.ObjectType.AnalogInput;

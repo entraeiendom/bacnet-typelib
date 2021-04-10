@@ -1,9 +1,9 @@
 package no.entra.bacnet.internal.properties;
 
 import no.entra.bacnet.internal.apdu.MeasurementUnit;
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectType;
-import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.services.BacnetParserException;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package no.entra.bacnet.parseandmap;
+package no.entra.bacnet.internal.parseandmap;
 
 public class ParserResult<T> {
 

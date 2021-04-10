@@ -2,8 +2,8 @@ package no.entra.bacnet.internal.bvlc;
 
 import no.entra.bacnet.bvlc.Bvlc;
 import no.entra.bacnet.internal.octet.OctetReader;
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.octet.Octet;
-import no.entra.bacnet.parseandmap.ParserResult;
 
 public class BvlcParser {
 

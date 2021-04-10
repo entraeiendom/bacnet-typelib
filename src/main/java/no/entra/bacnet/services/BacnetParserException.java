@@ -1,6 +1,6 @@
 package no.entra.bacnet.services;
 
-import no.entra.bacnet.parseandmap.ParserResult;
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 
 import java.util.UUID;
 

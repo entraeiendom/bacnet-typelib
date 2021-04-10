@@ -1,8 +1,8 @@
 package no.entra.bacnet.internal.npdu;
 
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.npdu.Npdu;
 import no.entra.bacnet.octet.Octet;
-import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.utils.HexUtils;
 import org.junit.jupiter.api.Test;
 

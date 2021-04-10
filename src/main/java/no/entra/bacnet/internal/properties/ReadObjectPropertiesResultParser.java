@@ -3,8 +3,8 @@ package no.entra.bacnet.internal.properties;
 import no.entra.bacnet.internal.apdu.SDContextTag;
 import no.entra.bacnet.internal.objects.ObjectIdMapper;
 import no.entra.bacnet.internal.octet.OctetReader;
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.objects.ObjectId;
-import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.services.BacnetParserException;
 import org.slf4j.Logger;
 

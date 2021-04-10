@@ -3,8 +3,8 @@ package no.entra.bacnet;
 import no.entra.bacnet.bvlc.Bvlc;
 import no.entra.bacnet.internal.bvlc.BvlcParser;
 import no.entra.bacnet.internal.npdu.NpduParser;
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.npdu.Npdu;
-import no.entra.bacnet.parseandmap.ParserResult;
 
 public class BacnetMessageParser {
 

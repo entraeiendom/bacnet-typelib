@@ -1,4 +1,4 @@
-package no.entra.bacnet.parseandmap;
+package no.entra.bacnet.internal.parseandmap;
 
 import no.entra.bacnet.internal.octet.OctetReader;
 import no.entra.bacnet.octet.Octet;

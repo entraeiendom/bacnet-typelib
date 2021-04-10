@@ -8,9 +8,9 @@ import no.entra.bacnet.internal.apdu.SDContextTag;
 import no.entra.bacnet.internal.apdu.ValueType;
 import no.entra.bacnet.internal.objects.ObjectIdMapper;
 import no.entra.bacnet.internal.octet.OctetReader;
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.octet.Octet;
-import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.services.BacnetParserException;
 import org.slf4j.Logger;
 
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static no.entra.bacnet.internal.apdu.SDContextTag.*;
-import static no.entra.bacnet.parseandmap.StringParser.parseCharStringExtended;
+import static no.entra.bacnet.internal.parseandmap.StringParser.parseCharStringExtended;
 import static no.entra.bacnet.utils.HexUtils.toFloat;
 import static no.entra.bacnet.utils.HexUtils.toInt;
 import static org.slf4j.LoggerFactory.getLogger;

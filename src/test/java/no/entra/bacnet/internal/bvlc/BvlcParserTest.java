@@ -1,7 +1,7 @@
 package no.entra.bacnet.internal.bvlc;
 
 import no.entra.bacnet.bvlc.Bvlc;
-import no.entra.bacnet.parseandmap.ParserResult;
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 import org.junit.jupiter.api.Test;
 
 import java.net.UnknownHostException;
