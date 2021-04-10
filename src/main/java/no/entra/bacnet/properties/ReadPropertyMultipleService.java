@@ -1,4 +1,4 @@
-package no.entra.bacnet.services;
+package no.entra.bacnet.properties;
 
 import no.entra.bacnet.apdu.*;
 import no.entra.bacnet.bvlc.Bvlc;
@@ -12,8 +12,10 @@ import no.entra.bacnet.objects.ObjectProperties;
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.octet.OctetReader;
 import no.entra.bacnet.parseandmap.ParserResult;
-import no.entra.bacnet.properties.PropertyIdentifier;
-import no.entra.bacnet.properties.PropertyReference;
+import no.entra.bacnet.services.BacnetRequest;
+import no.entra.bacnet.services.BacnetResponse;
+import no.entra.bacnet.services.ConfirmedServiceChoice;
+import no.entra.bacnet.services.Service;
 import org.slf4j.Logger;
 
 import java.util.HashSet;

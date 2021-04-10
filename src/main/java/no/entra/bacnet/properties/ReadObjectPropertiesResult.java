@@ -1,4 +1,4 @@
-package no.entra.bacnet.services;
+package no.entra.bacnet.properties;
 
 import no.entra.bacnet.objects.ObjectId;
 

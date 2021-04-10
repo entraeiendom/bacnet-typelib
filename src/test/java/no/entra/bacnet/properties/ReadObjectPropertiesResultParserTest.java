@@ -1,10 +1,10 @@
-package no.entra.bacnet.services;
+package no.entra.bacnet.properties;
 
 import no.entra.bacnet.apdu.MeasurementUnit;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectType;
 import no.entra.bacnet.parseandmap.ParserResult;
-import no.entra.bacnet.properties.PropertyIdentifier;
+import no.entra.bacnet.services.BacnetParserException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

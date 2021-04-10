@@ -1,4 +1,4 @@
-package no.entra.bacnet.services;
+package no.entra.bacnet.properties;
 
 import org.slf4j.Logger;
 

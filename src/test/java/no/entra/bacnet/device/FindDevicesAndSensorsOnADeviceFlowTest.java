@@ -3,8 +3,8 @@ package no.entra.bacnet.device;
 import no.entra.bacnet.objects.ObjectProperties;
 import no.entra.bacnet.properties.PropertyIdentifier;
 import no.entra.bacnet.properties.PropertyReference;
-import no.entra.bacnet.services.ReadPropertyMultipleService;
-import no.entra.bacnet.services.ReadPropertyMultipleServiceBuilder;
+import no.entra.bacnet.properties.ReadPropertyMultipleService;
+import no.entra.bacnet.properties.ReadPropertyMultipleServiceBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

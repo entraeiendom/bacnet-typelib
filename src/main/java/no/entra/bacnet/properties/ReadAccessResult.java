@@ -17,6 +17,7 @@ import java.util.HashMap;
 import static java.lang.Integer.parseInt;
 import static org.slf4j.LoggerFactory.getLogger;
 
+@Deprecated
 public class ReadAccessResult {
     private static final Logger log = getLogger(ReadAccessResult.class);
     public static final String OBJECT_IDENTIFIER = "0c";

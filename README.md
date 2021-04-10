@@ -23,3 +23,11 @@ Link will be the combination of sendTo Address, and InvokeId. The response will 
 sendTo Address, now as sender Address.
 
 Step 1 will have to be more simple though.
+
+## Parse Response
+
+```
+Read from Socket, convert byte to string.
+String hexString = ..fromByte(..)
+ParserResult<T> result = BvlcParser.parse(hexString)
+```

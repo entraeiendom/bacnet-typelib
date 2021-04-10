@@ -1,18 +1,18 @@
-package no.entra.bacnet.services;
+package no.entra.bacnet.properties;
 
 import no.entra.bacnet.apdu.MeasurementUnit;
 import no.entra.bacnet.error.ErrorClassType;
 import no.entra.bacnet.error.ErrorCodeType;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.parseandmap.ParserResult;
-import no.entra.bacnet.properties.PropertyIdentifier;
+import no.entra.bacnet.services.BacnetParserException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static no.entra.bacnet.objects.ObjectType.AnalogValue;
-import static no.entra.bacnet.services.ReadPropertyResultParser.ERROR_CLASS;
-import static no.entra.bacnet.services.ReadPropertyResultParser.ERROR_CODE;
+import static no.entra.bacnet.properties.ReadPropertyResultParser.ERROR_CLASS;
+import static no.entra.bacnet.properties.ReadPropertyResultParser.ERROR_CODE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*

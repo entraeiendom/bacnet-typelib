@@ -1,11 +1,9 @@
-package no.entra.bacnet.services;
+package no.entra.bacnet.properties;
 
 import no.entra.bacnet.device.DeviceId;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectProperties;
 import no.entra.bacnet.objects.ObjectType;
-import no.entra.bacnet.properties.PropertyIdentifier;
-import no.entra.bacnet.properties.PropertyReference;
 
 import java.util.Arrays;
 import java.util.List;
