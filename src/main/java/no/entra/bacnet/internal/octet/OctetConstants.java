@@ -1,4 +1,4 @@
-package no.entra.bacnet.octet;
+package no.entra.bacnet.internal.octet;
 
 public class OctetConstants {
     public final static Octet ENCODING_UCS_2 = Octet.fromHexString("04");

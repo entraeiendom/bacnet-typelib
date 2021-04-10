@@ -1,5 +1,6 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.internal.objects;
 
+import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.properties.PropertyIdentifier;
 
 import java.util.HashMap;

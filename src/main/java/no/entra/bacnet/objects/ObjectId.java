@@ -1,5 +1,6 @@
 package no.entra.bacnet.objects;
 
+import no.entra.bacnet.internal.objects.ObjectIdMapper;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;

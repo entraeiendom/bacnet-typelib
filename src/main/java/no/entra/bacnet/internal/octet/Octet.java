@@ -1,4 +1,4 @@
-package no.entra.bacnet.octet;
+package no.entra.bacnet.internal.octet;
 
 import java.util.Arrays;
 

@@ -1,6 +1,6 @@
 package no.entra.bacnet.objects;
 
-import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.internal.octet.Octet;
 
 import static java.lang.Integer.parseInt;
 

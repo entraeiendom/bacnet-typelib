@@ -1,6 +1,6 @@
 package no.entra.bacnet.apdu;
 
-import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.internal.octet.Octet;
 import org.junit.jupiter.api.Test;
 
 import static no.entra.bacnet.apdu.ApplicationTag.APPTAG4LENGTH4;

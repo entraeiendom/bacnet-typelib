@@ -1,7 +1,7 @@
 package no.entra.bacnet.utils;
 
-import no.entra.bacnet.octet.Octet;
-import no.entra.bacnet.octet.OctetConstants;
+import no.entra.bacnet.internal.octet.Octet;
+import no.entra.bacnet.internal.octet.OctetConstants;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

@@ -1,7 +1,8 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.internal.objects;
 
-import no.entra.bacnet.octet.Octet;
-import no.entra.bacnet.octet.OctetReader;
+import no.entra.bacnet.internal.octet.Octet;
+import no.entra.bacnet.internal.octet.OctetReader;
+import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.utils.HexUtils;
 import org.slf4j.Logger;

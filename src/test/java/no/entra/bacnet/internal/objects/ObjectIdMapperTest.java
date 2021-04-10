@@ -1,6 +1,8 @@
-package no.entra.bacnet.objects;
+package no.entra.bacnet.internal.objects;
 
-import no.entra.bacnet.octet.OctetReader;
+import no.entra.bacnet.internal.octet.OctetReader;
+import no.entra.bacnet.objects.ObjectId;
+import no.entra.bacnet.objects.ObjectType;
 import no.entra.bacnet.parseandmap.ParserResult;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package no.entra.bacnet.objects;
 
-import no.entra.bacnet.octet.Octet;
-import no.entra.bacnet.octet.OctetReader;
+import no.entra.bacnet.internal.octet.Octet;
+import no.entra.bacnet.internal.octet.OctetReader;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

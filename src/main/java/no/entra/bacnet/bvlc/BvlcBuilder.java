@@ -1,6 +1,6 @@
 package no.entra.bacnet.bvlc;
 
-import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.internal.octet.Octet;
 
 import static no.entra.bacnet.bvlc.Bvlc.findExpectdNumberOfOctetsInBvll;
 

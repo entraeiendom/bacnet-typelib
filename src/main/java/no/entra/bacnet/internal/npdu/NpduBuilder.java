@@ -1,7 +1,7 @@
-package no.entra.bacnet.npdu;
+package no.entra.bacnet.internal.npdu;
 
 
-import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.internal.octet.Octet;
 
 //TODO #1 Set Control based on bits
 public class NpduBuilder {

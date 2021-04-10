@@ -1,9 +1,9 @@
 package no.entra.bacnet.properties;
 
 import no.entra.bacnet.apdu.SDContextTag;
+import no.entra.bacnet.internal.objects.ObjectIdMapper;
+import no.entra.bacnet.internal.octet.OctetReader;
 import no.entra.bacnet.objects.ObjectId;
-import no.entra.bacnet.objects.ObjectIdMapper;
-import no.entra.bacnet.octet.OctetReader;
 import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.services.BacnetParserException;
 import org.slf4j.Logger;

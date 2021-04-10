@@ -1,6 +1,6 @@
 package no.entra.bacnet.apdu;
 
-import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.internal.octet.Octet;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;

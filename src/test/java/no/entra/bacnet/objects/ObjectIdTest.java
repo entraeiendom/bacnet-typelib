@@ -1,5 +1,6 @@
 package no.entra.bacnet.objects;
 
+import no.entra.bacnet.internal.objects.ObjectIdMapper;
 import no.entra.bacnet.parseandmap.ParserResult;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package no.entra.bacnet.npdu;
+package no.entra.bacnet.internal.npdu;
 
 import org.junit.jupiter.api.Test;
 

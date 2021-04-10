@@ -1,6 +1,6 @@
 package no.entra.bacnet.device;
 
-import no.entra.bacnet.objects.ObjectProperties;
+import no.entra.bacnet.internal.objects.ObjectProperties;
 import no.entra.bacnet.properties.PropertyIdentifier;
 import no.entra.bacnet.properties.PropertyReference;
 import no.entra.bacnet.properties.ReadPropertyMultipleService;

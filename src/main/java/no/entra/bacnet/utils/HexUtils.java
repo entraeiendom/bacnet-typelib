@@ -1,13 +1,13 @@
 package no.entra.bacnet.utils;
 
-import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.internal.octet.Octet;
 import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.BitSet;
 
-import static no.entra.bacnet.octet.OctetConstants.ENCODING_UCS_2;
-import static no.entra.bacnet.octet.OctetConstants.ENCODING_UTF_8;
+import static no.entra.bacnet.internal.octet.OctetConstants.ENCODING_UCS_2;
+import static no.entra.bacnet.internal.octet.OctetConstants.ENCODING_UTF_8;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class HexUtils {

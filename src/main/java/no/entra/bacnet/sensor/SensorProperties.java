@@ -1,6 +1,6 @@
 package no.entra.bacnet.sensor;
 
-import no.entra.bacnet.objects.ObjectProperties;
+import no.entra.bacnet.internal.objects.ObjectProperties;
 import no.entra.bacnet.properties.PropertyIdentifier;
 
 import java.util.Set;

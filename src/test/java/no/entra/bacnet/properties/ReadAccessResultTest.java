@@ -2,8 +2,8 @@ package no.entra.bacnet.properties;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import no.entra.bacnet.internal.objects.ObjectIdMapper;
 import no.entra.bacnet.objects.ObjectId;
-import no.entra.bacnet.objects.ObjectIdMapper;
 import no.entra.bacnet.parseandmap.ParserResult;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;

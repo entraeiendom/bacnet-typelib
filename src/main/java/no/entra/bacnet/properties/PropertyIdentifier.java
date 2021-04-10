@@ -1,7 +1,7 @@
 package no.entra.bacnet.properties;
 
 
-import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.internal.octet.Octet;
 
 public enum PropertyIdentifier {
     AbsenteeLimit("f4"),

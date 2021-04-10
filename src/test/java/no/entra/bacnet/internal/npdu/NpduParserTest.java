@@ -1,13 +1,13 @@
-package no.entra.bacnet.npdu;
+package no.entra.bacnet.internal.npdu;
 
-import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.internal.octet.Octet;
 import no.entra.bacnet.parseandmap.ParserResult;
 import no.entra.bacnet.utils.HexUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static no.entra.bacnet.octet.Octet.fromHexString;
+import static no.entra.bacnet.internal.octet.Octet.fromHexString;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NpduParserTest {

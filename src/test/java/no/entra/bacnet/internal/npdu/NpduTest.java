@@ -1,6 +1,6 @@
-package no.entra.bacnet.npdu;
+package no.entra.bacnet.internal.npdu;
 
-import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.internal.octet.Octet;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
