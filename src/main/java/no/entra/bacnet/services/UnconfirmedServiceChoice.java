@@ -1,6 +1,6 @@
 package no.entra.bacnet.services;
 
-import no.entra.bacnet.internal.octet.Octet;
+import no.entra.bacnet.octet.Octet;
 
 public enum UnconfirmedServiceChoice implements ServiceChoice {
     IAm("00"),

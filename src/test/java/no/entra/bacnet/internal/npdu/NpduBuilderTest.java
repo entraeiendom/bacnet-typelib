@@ -1,5 +1,6 @@
 package no.entra.bacnet.internal.npdu;
 
+import no.entra.bacnet.npdu.Npdu;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

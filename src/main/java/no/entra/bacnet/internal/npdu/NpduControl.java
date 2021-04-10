@@ -1,7 +1,7 @@
 package no.entra.bacnet.internal.npdu;
 
 
-import no.entra.bacnet.internal.octet.Octet;
+import no.entra.bacnet.octet.Octet;
 
 public enum  NpduControl {
     NormalMessage("00"),

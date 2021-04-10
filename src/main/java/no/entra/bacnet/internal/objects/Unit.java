@@ -1,6 +1,6 @@
 package no.entra.bacnet.internal.objects;
 
-import no.entra.bacnet.internal.octet.Octet;
+import no.entra.bacnet.octet.Octet;
 
 @Deprecated //Use MeasurementUnit
 public enum Unit {

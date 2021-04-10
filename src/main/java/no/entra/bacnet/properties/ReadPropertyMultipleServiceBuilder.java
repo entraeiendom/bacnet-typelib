@@ -2,6 +2,8 @@ package no.entra.bacnet.properties;
 
 import no.entra.bacnet.device.DeviceId;
 import no.entra.bacnet.internal.objects.ObjectProperties;
+import no.entra.bacnet.internal.properties.PropertyIdentifier;
+import no.entra.bacnet.internal.properties.PropertyReference;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectType;
 

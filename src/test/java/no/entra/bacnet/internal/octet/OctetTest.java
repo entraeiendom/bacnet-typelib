@@ -1,6 +1,7 @@
 package no.entra.bacnet.internal.octet;
 
-import no.entra.bacnet.apdu.SDContextTag;
+import no.entra.bacnet.internal.apdu.SDContextTag;
+import no.entra.bacnet.octet.Octet;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,6 +1,6 @@
 package no.entra.bacnet.services;
 
-import no.entra.bacnet.internal.octet.Octet;
+import no.entra.bacnet.octet.Octet;
 
 public enum ConfirmedServiceChoice implements ServiceChoice {
     AcknowledgeAlarm("00"),

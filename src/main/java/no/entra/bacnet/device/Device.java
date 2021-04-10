@@ -1,6 +1,6 @@
 package no.entra.bacnet.device;
 
-import no.entra.bacnet.properties.Property;
+import no.entra.bacnet.internal.properties.Property;
 
 import java.time.Instant;
 import java.util.HashMap;

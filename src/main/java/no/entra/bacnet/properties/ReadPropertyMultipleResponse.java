@@ -1,5 +1,6 @@
 package no.entra.bacnet.properties;
 
+import no.entra.bacnet.internal.properties.ReadObjectPropertiesResult;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;

@@ -1,5 +1,7 @@
 package no.entra.bacnet.apdu;
 
+import no.entra.bacnet.internal.apdu.ApduType;
+
 public class Apdu {
 
     private final ApduType apduType;

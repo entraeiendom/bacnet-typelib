@@ -1,6 +1,6 @@
 package no.entra.bacnet.error;
 
-import no.entra.bacnet.internal.octet.Octet;
+import no.entra.bacnet.octet.Octet;
 
 import static java.lang.Integer.parseInt;
 

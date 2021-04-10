@@ -1,6 +1,6 @@
 package no.entra.bacnet.utils;
 
-import no.entra.bacnet.internal.octet.Octet;
+import no.entra.bacnet.octet.Octet;
 import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;

@@ -1,5 +1,7 @@
 package no.entra.bacnet.internal.octet;
 
+import no.entra.bacnet.octet.Octet;
+
 import java.util.ArrayList;
 import java.util.List;
 
