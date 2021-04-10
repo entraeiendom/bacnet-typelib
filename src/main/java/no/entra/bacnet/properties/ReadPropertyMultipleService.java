@@ -4,8 +4,8 @@ import no.entra.bacnet.BacnetRequest;
 import no.entra.bacnet.BacnetResponse;
 import no.entra.bacnet.apdu.Apdu;
 import no.entra.bacnet.bvlc.Bvlc;
-import no.entra.bacnet.internal.apdu.ApduType;
 import no.entra.bacnet.internal.apdu.ApplicationTag;
+import no.entra.bacnet.internal.apdu.MessageType;
 import no.entra.bacnet.internal.apdu.SDContextTag;
 import no.entra.bacnet.internal.apdu.ValueType;
 import no.entra.bacnet.internal.bvlc.BvlcBuilder;
@@ -106,7 +106,7 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
     @Override
     public String buildHexString() {
         Apdu apdu = Apdu.ApduBuilder.builder()
-                .withApduType(ApduType.ConfirmedRequest)
+                .withApduType(MessageType.ConfirmedRequest)
                 .isSegmented(false)
                 .hasMoreSegments(false)
                 .isSegmentedReplyAllowed(true)

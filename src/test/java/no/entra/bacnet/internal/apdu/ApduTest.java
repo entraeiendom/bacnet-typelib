@@ -10,7 +10,7 @@ class ApduTest {
     @Test
     void toHexString() {
         Apdu apdu = Apdu.ApduBuilder.builder()
-                .withApduType(ApduType.ConfirmedRequest)
+                .withApduType(MessageType.ConfirmedRequest)
                 .isSegmented(false)
                 .hasMoreSegments(false)
                 .isSegmentedReplyAllowed(true)
