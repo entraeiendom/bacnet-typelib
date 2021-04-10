@@ -1,5 +1,6 @@
 package no.entra.bacnet.bvlc;
 
+@Deprecated //Use ParserResult
 public class BvlcResult {
     private final Bvlc bvlc;
     private final String unprocessedHexString;

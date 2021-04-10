@@ -1,5 +1,6 @@
 package no.entra.bacnet.npdu;
 
+@Deprecated //Use ParserResult<Npdu>
 public class NpduResult {
     private final Npdu npdu;
     private final String unprocessedHexString;
