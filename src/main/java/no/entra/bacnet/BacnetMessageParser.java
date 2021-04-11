@@ -7,6 +7,7 @@ import no.entra.bacnet.internal.bvlc.BvlcParser;
 import no.entra.bacnet.internal.npdu.NpduParser;
 import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.npdu.Npdu;
+import no.entra.bacnet.services.BacnetParserException;
 import no.entra.bacnet.services.ServiceChoice;
 
 public class BacnetMessageParser {
@@ -16,7 +17,12 @@ public class BacnetMessageParser {
         String hexString = bvlcResult.getUnparsedHexString();
         ParserResult<Npdu> npduResult = NpduParser.parse(hexString);
         hexString = npduResult.getUnparsedHexString();
-        ParserResult<Apdu> apduResult = ApduParser.parse(hexString);
+        ParserResult<Apdu> apduResult = null;
+        try {
+            apduResult = ApduParser.parse(hexString);
+        } catch (BacnetParserException e) {
+            e.printStackTrace();
+        }
         if (apduResult.isParsedOk()) {
             Apdu apdu = apduResult.getParsedObject();
             ServiceChoice serviceChoice = apdu.getServiceChoice();

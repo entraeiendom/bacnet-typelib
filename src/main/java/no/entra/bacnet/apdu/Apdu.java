@@ -6,10 +6,10 @@ import no.entra.bacnet.services.ServiceChoice;
 public class Apdu {
 
     private final MessageType messageType; //PDU type in spec. First char in ApduHexString
-    private final char applicationControlBits; //Second char in ApduHexString//2 = unsegmented request, no more segments, segmented response accepted
+    private char applicationControlBits; //Second char in ApduHexString//2 = unsegmented request, no more segments, segmented response accepted
 
-    private final char maxSegmentsAccepted; //Used in BacnetRequest7 = more than 64 accepted
-    private final char maxApduLengthAccepted; // Used in BacnetRequest. 5 = up to 1476 octets
+    private char maxSegmentsAccepted; //Used in BacnetRequest 7 = more than 64 accepted
+    private char maxApduLengthAccepted; // Used in BacnetRequest. 5 = up to 1476 octets
 
     //Used for all BacnetRequest that require a response. See ConfirmedServiceRequest. Response will
     // match this invokeId.
@@ -22,6 +22,9 @@ public class Apdu {
     private boolean isSegmentedReplyAllowed;
     private boolean hasMoreSegments;
 
+    public Apdu(MessageType messageType) {
+        this.messageType = messageType;
+    }
 
     public Apdu(MessageType messageType, char applicationControlBits, char maxSegmentsAccepted, char maxApduLengthAccepted) {
         this.messageType = messageType;
@@ -38,12 +41,24 @@ public class Apdu {
         return applicationControlBits;
     }
 
+    public void setApplicationControlBits(char applicationControlBits) {
+        this.applicationControlBits = applicationControlBits;
+    }
+
     public char getMaxSegmentsAccepted() {
         return maxSegmentsAccepted;
     }
 
+    public void setMaxSegmentsAccepted(char maxSegmentsAccepted) {
+        this.maxSegmentsAccepted = maxSegmentsAccepted;
+    }
+
     public char getMaxApduLengthAccepted() {
         return maxApduLengthAccepted;
+    }
+
+    public void setMaxApduLengthAccepted(char maxApduLengthAccepted) {
+        this.maxApduLengthAccepted = maxApduLengthAccepted;
     }
 
     public int getInvokeId() {
@@ -101,19 +116,21 @@ public class Apdu {
 
         private ApduBuilder() {
         }
-//Used for all BacnetRequest that require a response. See ConfirmedServiceRequest. Response will
+
+        //Used for all BacnetRequest that require a response. See ConfirmedServiceRequest. Response will
         public static ApduBuilder builder() {
             return new ApduBuilder();
         }
 
         public Apdu build() {
-                mapPduFlags();
+            mapPduFlags();
             Apdu apdu = new Apdu(apduType, pduFlags, maxSegmentsAccepted, maxApduLengthAccepted);
             apdu.isSegmented = segmented;
             apdu.hasMoreSegments = hasMoreSegments;
             apdu.isSegmentedReplyAllowed = segmentedReplyAllowed;
             return apdu;
         }
+
         protected void mapPduFlags() {
             if (!segmented && !hasMoreSegments && segmentedReplyAllowed) {
                 pduFlags = '2';

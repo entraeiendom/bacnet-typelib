@@ -35,7 +35,7 @@ import static no.entra.bacnet.utils.HexUtils.toInt;
 import static no.entra.bacnet.utils.StringUtils.hasValue;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ReadPropertyMultipleService implements Service, BacnetRequest, BacnetResponse {
+public class ReadPropertyMultipleService extends BacnetRequest implements Service, BacnetResponse {
     private static final Logger log = getLogger(ReadPropertyMultipleService.class);
 
     private Integer invokeId = null;
@@ -134,6 +134,11 @@ public class ReadPropertyMultipleService implements Service, BacnetRequest, Bacn
         Npdu npdu = new NpduBuilder().withExpectingReply().build();
         String hexString = bvlc.toHexString() + npdu.toHexString() + apduHexString;
         return hexString;
+    }
+
+    @Override
+    public boolean expectReply() {
+        return false;
     }
 
     public static ReadPropertyMultipleService parse(String hexString) {

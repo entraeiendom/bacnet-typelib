@@ -1,6 +1,11 @@
 package no.entra.bacnet;
 
-public interface BacnetRequest {
+public abstract class BacnetRequest {
+    //SEE no.entra.bacnet.json.services.ServiceBuilder
+    protected BacnetRequest() {
+    }
 
-    String buildHexString();
+    public abstract String buildHexString();
+
+    public abstract boolean expectReply();
 }
