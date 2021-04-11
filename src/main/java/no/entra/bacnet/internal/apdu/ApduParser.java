@@ -68,6 +68,9 @@ public class ApduParser {
 
     static ServiceChoice findServiceChoice(MessageType messageType, Octet serviceChoiceOctet) {
         ServiceChoice serviceChoice = null;
+        if (messageType == null) {
+            throw new IllegalArgumentException("MessageType: " + " is not expected. Do not know how to parse this message.");
+        }
         switch (messageType) {
             case Error:
             case SimpleAck:

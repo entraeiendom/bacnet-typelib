@@ -1,9 +1,11 @@
 package no.entra.bacnet.internal.apdu;
 
+import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.services.ConfirmedServiceChoice;
+import no.entra.bacnet.services.UnconfirmedServiceChoice;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ApduParserTest {
 
@@ -13,6 +15,10 @@ class ApduParserTest {
 
     @Test
     void findServiceChoice() {
+        assertEquals(UnconfirmedServiceChoice.IAm, ApduParser.findServiceChoice(MessageType.UnconfirmedRequest, Octet.fromHexString("00")));
+        assertEquals(ConfirmedServiceChoice.AcknowledgeAlarm, ApduParser.findServiceChoice(MessageType.ConfirmedRequest, Octet.fromHexString("00")));
+        assertNull(ApduParser.findServiceChoice(MessageType.SegmentACK, Octet.fromHexString("00")));
+        assertThrows(IllegalArgumentException.class, () -> ApduParser.findServiceChoice(null, Octet.fromHexString("00")));
     }
 
     @Test
