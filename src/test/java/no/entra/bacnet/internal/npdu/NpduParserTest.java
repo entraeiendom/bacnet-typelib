@@ -45,4 +45,17 @@ class NpduParserTest {
         assertEquals("0c", sadr[0].toString());
         assertEquals(12, sadrInt);
     }
+
+    @Test
+    void complexAck() {
+        String npduHexString = "0104381f03040c0cc404edcc0dc404ed";
+        ParserResult<Npdu> result = NpduParser.parse(npduHexString);
+        assertNotNull(result);
+        assertTrue(result.isParsedOk());
+        Npdu npdu = result.getParsedObject();
+        assertNotNull(npdu);
+        assertTrue(npdu.getExpectingResponse());
+        assertEquals("381f03040c0cc404edcc0dc404ed", result.getUnparsedHexString());
+
+    }
 }

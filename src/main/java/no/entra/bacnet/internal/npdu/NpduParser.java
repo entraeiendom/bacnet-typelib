@@ -44,6 +44,7 @@ public class NpduParser {
 //            String unprocessedHexString = npduReader.unprocessedHexString();
 //            result = new NpduResult(npdu, unprocessedHexString);
 //        }
+        result.setUnparsedHexString(npduReader.unprocessedHexString());
         return result;
     }
 
