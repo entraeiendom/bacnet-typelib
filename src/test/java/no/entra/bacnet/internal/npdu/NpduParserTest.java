@@ -54,7 +54,7 @@ class NpduParserTest {
         assertTrue(result.isParsedOk());
         Npdu npdu = result.getParsedObject();
         assertNotNull(npdu);
-        assertTrue(npdu.getExpectingResponse());
+        assertTrue(npdu.isExpectingResponse());
         assertEquals("381f03040c0cc404edcc0dc404ed", result.getUnparsedHexString());
 
     }

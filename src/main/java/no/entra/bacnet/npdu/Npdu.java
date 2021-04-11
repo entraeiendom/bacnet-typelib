@@ -82,14 +82,14 @@ public class Npdu {
         return destinationIsAvailable;
     }
 
-    public boolean isExpectingResponse() {
+    public boolean setExpectingResponse() {
         return expectingResponse;
     }
     public void expectingResponse(boolean expectingResponse) {
         this.expectingResponse = expectingResponse;
     }
 
-    public boolean getExpectingResponse() {
+    public boolean isExpectingResponse() {
         return expectingResponse;
     }
 
