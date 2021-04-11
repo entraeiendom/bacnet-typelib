@@ -1,6 +1,8 @@
 package no.entra.bacnet.internal.services;
 
+import no.entra.bacnet.device.DeviceId;
 import no.entra.bacnet.internal.apdu.MeasurementUnit;
+import no.entra.bacnet.internal.objects.Segmentation;
 import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.internal.properties.PropertyIdentifier;
 import no.entra.bacnet.internal.properties.ReadObjectPropertiesResult;
@@ -8,9 +10,8 @@ import no.entra.bacnet.internal.properties.ReadPropertyResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectType;
 import no.entra.bacnet.properties.ReadPropertyMultipleService;
-import no.entra.bacnet.services.BacnetParserException;
-import no.entra.bacnet.services.ConfirmedServiceChoice;
-import no.entra.bacnet.services.Service;
+import no.entra.bacnet.services.*;
+import no.entra.bacnet.vendor.Vendor;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,7 +21,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class ServiceParserTest {
 
     @Test
-    void parseTest() {
+    void iamService() {
+        String hexString = "c40200000822040091002105";
+        ParserResult<Service> parserResult = ServiceParser.parse(UnconfirmedServiceChoice.IAm, hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        Service parsedObject = parserResult.getParsedObject();
+        assertTrue(parsedObject instanceof IAmService);
+        DeviceId deviceId = new DeviceId(8);
+        IAmService iAmService = (IAmService) parserResult.getParsedObject();
+        assertEquals(deviceId, iAmService.getObjectId());
+        assertEquals(1024, iAmService.getMaxADPULengthAccepted());
+        assertEquals(Segmentation.SegmentedBoth, iAmService.getSegmentation());
+        Vendor vendor = new Vendor("05", "Johnson Controls, Inc");
+        assertEquals(vendor, iAmService.getVendor());
     }
 
     //FIXME is too complex for end user. Need more explicit typing in Service Interface.

@@ -35,7 +35,31 @@ public class ServiceParser {
     WhoIs, IAm, IHave, +++
      */
     protected static ParserResult<Service> parseServiceNotExpectingReply(UnconfirmedServiceChoice serviceChoice, String hexString) {
-        return null;
+        ParserResult<Service> parserResult = new ParserResult<>();
+        parserResult.setInitialHexString(hexString);
+
+        try {
+            switch (serviceChoice) {
+                case IAm:
+                    ParserResult<IAmService> iAmResult = IAmServiceParser.parse(hexString);
+                    if (iAmResult.isParsedOk()) {
+                        Service iamService = iAmResult.getParsedObject();
+                        parserResult.setParsedObject(iamService);
+                        parserResult.setParsedOk(true);
+                        parserResult.setUnparsedHexString(iAmResult.getUnparsedHexString());
+                    }
+                    break;
+                default:
+                    //TODO
+
+            }
+        } catch (BacnetParserException e) {
+            parserResult.setUnparsedHexString(hexString);
+            parserResult.setErrorMessage(e.getMessage());
+            parserResult.setParsedOk(false);
+        }
+
+        return parserResult;
     }
 
     /*
