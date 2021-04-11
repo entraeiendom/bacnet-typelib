@@ -87,15 +87,16 @@ public class ApduParser {
                     //TODO implemnt this else clause
                     parserResult.setParsedOk(false);
                     parserResult.setErrorMessage("Not implemented yet");
-                    parserResult.setUnparsedHexString(serviceReader.unprocessedHexString());
+//                    parserResult.setUnparsedHexString(serviceReader.unprocessedHexString());
                 }
             } catch (IllegalArgumentException e) {
                 parserResult.setParsedOk(false);
                 parserResult.setErrorMessage(e.getMessage());
-                parserResult.setUnparsedHexString(serviceReader.unprocessedHexString());
+//                parserResult.setUnparsedHexString(serviceReader.unprocessedHexString());
             }
             //apdu.setServiceChoice;
         }
+        parserResult.setUnparsedHexString(serviceReader.unprocessedHexString());
         return parserResult;
     }
 
