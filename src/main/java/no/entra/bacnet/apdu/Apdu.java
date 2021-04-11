@@ -21,6 +21,8 @@ public class Apdu {
     private boolean isSegmented;
     private boolean isSegmentedReplyAllowed;
     private boolean hasMoreSegments;
+    private int sequenceNumber; //TODO verify this is part of APDU, not Serviceimpl?
+    private int proposedWindowSize;//TODO verify this is part of APDU, not Serviceimpl?
 
     public Apdu(MessageType messageType) {
         this.messageType = messageType;
@@ -103,6 +105,22 @@ public class Apdu {
 
     public String toHexString() {
         return "" + messageType.getPduTypeChar() + applicationControlBits + maxSegmentsAccepted + maxApduLengthAccepted;
+    }
+
+    public void setSequenceNumber(int sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
+    }
+
+    public int getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setProposedWindowSize(int proposedWindowSize) {
+        this.proposedWindowSize = proposedWindowSize;
+    }
+
+    public int getProposedWindowSize() {
+        return proposedWindowSize;
     }
 
     public static final class ApduBuilder {

@@ -4,13 +4,13 @@ import no.entra.bacnet.apdu.Apdu;
 import no.entra.bacnet.internal.octet.OctetReader;
 import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.octet.Octet;
-import no.entra.bacnet.services.BacnetParserException;
 import no.entra.bacnet.services.ConfirmedServiceChoice;
 import no.entra.bacnet.services.ServiceChoice;
 import no.entra.bacnet.services.UnconfirmedServiceChoice;
 import no.entra.bacnet.utils.HexUtils;
 import org.slf4j.Logger;
 
+import static no.entra.bacnet.internal.apdu.MessageType.SegmentACK;
 import static no.entra.bacnet.internal.apdu.PduFlags.*;
 import static no.entra.bacnet.utils.HexUtils.toInt;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -18,7 +18,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ApduParser {
     private static final Logger log = getLogger(ApduParser.class);
 
-    public static ParserResult<Apdu> parse(String hexString) throws BacnetParserException {
+    public static ParserResult<Apdu> parse(String hexString) {
         //FIXME copy code from no.entra.bacnet.json.services.ServiceParser
         ParserResult<Apdu> parserResult = new ParserResult<>();
         Apdu apdu = null;
@@ -57,19 +57,42 @@ public class ApduParser {
                         serviceChoice = findServiceChoice(messageType, serviceChoiceOctet);
                         apdu.setServiceChoice(serviceChoice);
                     }
-                } else {
+                } else if (isSegmented(pduFlags) || messageType == SegmentACK) {
+                    Octet invokeIdOctet = serviceReader.next();
+                    int invokeId = toInt(invokeIdOctet);
+                    apdu.setInvokeId(invokeId);
+                    Octet sequenceNumberOctet = serviceReader.next();
+                    int sequenceNumber = toInt(sequenceNumberOctet);
+                    apdu.setSequenceNumber(sequenceNumber);
+                    Octet proposedWindowSizeOctet = serviceReader.next();
+                    int proposedWindowSize = toInt(proposedWindowSizeOctet);
+                    apdu.setProposedWindowSize(proposedWindowSize);
                     if (expectServiceChoiceOctet(messageType)) {
                         serviceChoiceOctet = serviceReader.next();
-                        //Could be ConfirmedServiceChoice, or UnconfirmedServiceChoice
                         serviceChoice = findServiceChoice(messageType, serviceChoiceOctet);
                         apdu.setServiceChoice(serviceChoice);
-                    } else {
-                        //TODO implemnte this else clause
-                        throw new BacnetParserException("Not implemented yet.", parserResult);
                     }
+                } else if (expectServiceChoiceOctet(messageType)) {
+                    if (messageType.equals(MessageType.ComplexAck)) {
+                        Octet invokeIdOctet = serviceReader.next();
+                        int invokeId = toInt(invokeIdOctet);
+                        apdu.setInvokeId(invokeId);
+                    }
+                    serviceChoiceOctet = serviceReader.next();
+                    //Could be ConfirmedServiceChoice, or UnconfirmedServiceChoice
+                    serviceChoice = findServiceChoice(messageType, serviceChoiceOctet);
+                    apdu.setServiceChoice(serviceChoice);
+
+                } else {
+                    //TODO implemnt this else clause
+                    parserResult.setParsedOk(false);
+                    parserResult.setErrorMessage("Not implemented yet");
+                    parserResult.setUnparsedHexString(serviceReader.unprocessedHexString());
                 }
             } catch (IllegalArgumentException e) {
-                throw new BacnetParserException(e.getMessage(), parserResult);
+                parserResult.setParsedOk(false);
+                parserResult.setErrorMessage(e.getMessage());
+                parserResult.setUnparsedHexString(serviceReader.unprocessedHexString());
             }
             //apdu.setServiceChoice;
         }
