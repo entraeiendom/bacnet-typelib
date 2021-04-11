@@ -23,6 +23,8 @@ public class Apdu {
     private boolean hasMoreSegments;
     private int sequenceNumber; //TODO verify this is part of APDU, not Serviceimpl?
     private int proposedWindowSize;//TODO verify this is part of APDU, not Serviceimpl?
+    private boolean senderIsServer;
+    private String abortReason;
 
     public Apdu(MessageType messageType) {
         this.messageType = messageType;
@@ -121,6 +123,22 @@ public class Apdu {
 
     public int getProposedWindowSize() {
         return proposedWindowSize;
+    }
+
+    public void setSenderIsServer(boolean senderIsServer) {
+        this.senderIsServer = senderIsServer;
+    }
+
+    public boolean getSenderIsServer() {
+        return senderIsServer;
+    }
+
+    public void setAbortReason(String abortReason) {
+        this.abortReason = abortReason;
+    }
+
+    public String getAbortReason() {
+        return abortReason;
     }
 
     public static final class ApduBuilder {

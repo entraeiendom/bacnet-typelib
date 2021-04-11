@@ -8,6 +8,7 @@ import no.entra.bacnet.internal.properties.ReadPropertyResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectType;
 import no.entra.bacnet.properties.ReadPropertyMultipleService;
+import no.entra.bacnet.services.AbortService;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -48,5 +49,14 @@ class BacnetMessageParserTest {
         assertEquals(null, resultList.get(3).getReadResult().get(PropertyIdentifier.PresentValue));
         assertEquals(null, resultList.get(3).getReadResult().get(PropertyIdentifier.PresentValue));
         assertEquals(errorMap, resultList.get(3).getReadResult().get(PropertyIdentifier.XxError));
+    }
+
+    @Test
+    void parseAbort() {
+        String hexString = "810a00090100710004";
+        BacnetResponse response = BacnetMessageParser.parse(hexString);
+        assertNotNull(response);
+        assertNotNull(response.getService());
+        AbortService service = (AbortService) response.getService();
     }
 }

@@ -10,6 +10,7 @@ import no.entra.bacnet.services.UnconfirmedServiceChoice;
 import no.entra.bacnet.utils.HexUtils;
 import org.slf4j.Logger;
 
+import static no.entra.bacnet.internal.apdu.MessageType.Abort;
 import static no.entra.bacnet.internal.apdu.MessageType.SegmentACK;
 import static no.entra.bacnet.internal.apdu.PduFlags.*;
 import static no.entra.bacnet.utils.HexUtils.toInt;
@@ -27,25 +28,33 @@ public class ApduParser {
         Octet serviceChoiceOctet = null;
         OctetReader serviceReader = new OctetReader(hexString);
         Octet messageTypeOctet = serviceReader.next();
-        log.debug("PDU Type {} in bits: {}{}", messageTypeOctet, HexUtils.toBitString(messageTypeOctet.getFirstNibble()),HexUtils.toBitString(messageTypeOctet.getSecondNibble()));
+        log.debug("PDU Type {} in bits: {}{}", messageTypeOctet, HexUtils.toBitString(messageTypeOctet.getFirstNibble()), HexUtils.toBitString(messageTypeOctet.getSecondNibble()));
         MessageType messageType = MessageType.fromOctet(messageTypeOctet);
         apdu = new Apdu(messageType);
         parserResult.setParsedObject(apdu);
         if (messageType != null) {
-            char pduFlags = messageTypeOctet.getSecondNibble();
-
-            if (isSegmented(pduFlags)) {
-                apdu.setSegmented(true);
-            }
-            if (hasMoreSegments(pduFlags)) {
-                apdu.setHasMoreSegments(true);
-            }
             try {
-                if (willAcceptSegmentedResponse(pduFlags)) {
+                char pduFlags = messageTypeOctet.getSecondNibble();
+
+                if (isServer(pduFlags)) {
+                    apdu.setSenderIsServer(true);
+                }
+                if (isSegmented(pduFlags)) {
+                    apdu.setSegmented(true);
+                }
+                if (hasMoreSegments(pduFlags)) {
+                    apdu.setHasMoreSegments(true);
+                }
+                if (messageType == Abort) {
+                    Octet invokeIdOctet = serviceReader.next();
+                    int invokeId = toInt(invokeIdOctet);
+                    apdu.setInvokeId(invokeId);
+                    String abortReason = AbortReason.fromOctet(serviceReader.next()).name();
+                    apdu.setAbortReason(abortReason);
+                } else if (willAcceptSegmentedResponse(pduFlags)) {
                     apdu.setSegmentedReplyAllowed(true);
                     Octet maxApduOctetsAccepted = serviceReader.next();
                     apdu.setMaxApduLengthAccepted(maxApduOctetsAccepted.getSecondNibble());
-
 
                     Octet invokeIdOctet = serviceReader.next();
                     int invokeId = toInt(invokeIdOctet);

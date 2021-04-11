@@ -13,7 +13,6 @@ import static no.entra.bacnet.utils.HexUtils.isBitSet;
  */
 public class PduFlags {
 
-
     public static boolean isSegmented(char pduFlag) {
         return isBitSet(pduFlag, 3);
     }
@@ -24,5 +23,9 @@ public class PduFlags {
 
     public static boolean willAcceptSegmentedResponse(char pduFlag) {
         return isBitSet(pduFlag,1);
+    }
+
+    public static boolean isServer(char pduFlag) {
+        return isBitSet(pduFlag, 0);
     }
 }
