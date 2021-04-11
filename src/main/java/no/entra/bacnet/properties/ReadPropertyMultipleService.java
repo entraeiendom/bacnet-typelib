@@ -1,7 +1,6 @@
 package no.entra.bacnet.properties;
 
 import no.entra.bacnet.BacnetRequest;
-import no.entra.bacnet.BacnetResponse;
 import no.entra.bacnet.apdu.Apdu;
 import no.entra.bacnet.bvlc.Bvlc;
 import no.entra.bacnet.internal.apdu.ApplicationTag;
@@ -35,7 +34,7 @@ import static no.entra.bacnet.utils.HexUtils.toInt;
 import static no.entra.bacnet.utils.StringUtils.hasValue;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ReadPropertyMultipleService extends BacnetRequest implements Service, BacnetResponse {
+public class ReadPropertyMultipleService extends BacnetRequest implements Service {
     private static final Logger log = getLogger(ReadPropertyMultipleService.class);
 
     private Integer invokeId = null;

@@ -1,6 +1,11 @@
 package no.entra.bacnet;
 
+import no.entra.bacnet.services.Service;
+
 public interface BacnetResponse<T> {
+
+    int statusCode();
+    Service getService();
  /*
   int statusCode();
 
