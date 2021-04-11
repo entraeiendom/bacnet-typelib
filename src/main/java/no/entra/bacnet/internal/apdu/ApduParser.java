@@ -57,13 +57,23 @@ public class ApduParser {
                         serviceChoice = findServiceChoice(messageType, serviceChoiceOctet);
                         apdu.setServiceChoice(serviceChoice);
                     }
+                } else {
+                    if (expectServiceChoiceOctet(messageType)) {
+                        serviceChoiceOctet = serviceReader.next();
+                        //Could be ConfirmedServiceChoice, or UnconfirmedServiceChoice
+                        serviceChoice = findServiceChoice(messageType, serviceChoiceOctet);
+                        apdu.setServiceChoice(serviceChoice);
+                    } else {
+                        //TODO implemnte this else clause
+                        throw new BacnetParserException("Not implemented yet.", parserResult);
+                    }
                 }
             } catch (IllegalArgumentException e) {
                 throw new BacnetParserException(e.getMessage(), parserResult);
             }
             //apdu.setServiceChoice;
         }
-        return null;
+        return parserResult;
     }
 
     static ServiceChoice findServiceChoice(MessageType messageType, Octet serviceChoiceOctet) {

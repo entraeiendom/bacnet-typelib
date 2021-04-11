@@ -1,6 +1,9 @@
 package no.entra.bacnet.internal.apdu;
 
+import no.entra.bacnet.apdu.Apdu;
+import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.services.BacnetParserException;
 import no.entra.bacnet.services.ConfirmedServiceChoice;
 import no.entra.bacnet.services.UnconfirmedServiceChoice;
 import org.junit.jupiter.api.Test;
@@ -10,8 +13,30 @@ import static org.junit.jupiter.api.Assertions.*;
 class ApduParserTest {
 
     @Test
-    void parse() {
+    void iamService() throws BacnetParserException {
+        String iamApdu = "1000c40200020f22040091002105";
+        ParserResult<Apdu> parserResult = ApduParser.parse(iamApdu);
+        Apdu apdu = parserResult.getParsedObject();
+        assertNotNull(apdu);
+        assertEquals(MessageType.UnconfirmedRequest, apdu.getMessageType());
+        assertEquals(UnconfirmedServiceChoice.IAm, apdu.getServiceChoice());
+        assertEquals("",parserResult.getUnparsedHexString());
     }
+
+    /*
+    @Test
+    void readPropertiesObjectNameProtocolVersionRevision() throws BacnetParserException {
+        String apduHexString = "30010e0c020000081e294d4e75060046574643554f29624e21014f298b4e210e4f1f";
+        ParserResult<Apdu> parserResult = ApduParser.parse(apduHexString);
+        Apdu apdu = parserResult.getParsedObject();
+        assertNotNull(apdu);
+        assertEquals(MessageType.ComplexAck, apdu.getMessageType());
+        assertEquals(1, apdu.getInvokeId());
+        assertEquals(ConfirmedServiceChoice.ReadPropertyMultiple, apdu.getServiceChoice());
+        assertEquals("0c020000081e294d4e75060046574643554f29624e21014f298b4e210e4f1f",parserResult.getUnparsedHexString());
+    }
+
+     */
 
     @Test
     void findServiceChoice() {
