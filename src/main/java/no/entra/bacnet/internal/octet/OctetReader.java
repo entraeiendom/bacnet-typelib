@@ -25,11 +25,15 @@ public class OctetReader {
      * @throws IllegalArgumentException if any character is not Hexadecimal.
      */
     public OctetReader(String hexString) throws IllegalArgumentException {
-        if (isValidHex(hexString)) {
-            this.hexString = hexString;
-            this.currentPos = 0;
-        } else {
-            throw new IllegalArgumentException("HexString may only contain 0-9a-f.");
+        try {
+            if (isValidHex(hexString)) {
+                this.hexString = hexString;
+                this.currentPos = 0;
+            } else {
+                throw new IllegalArgumentException("HexString failed to validate. Content is: " + hexString);
+            }
+        } catch (IllegalArgumentException e) {
+            throw e;
         }
     }
 

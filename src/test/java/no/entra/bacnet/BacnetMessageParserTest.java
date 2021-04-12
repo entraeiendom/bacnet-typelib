@@ -65,6 +65,16 @@ class BacnetMessageParserTest {
 
     @Test
     void whoIsService() {
+        String whoIsHexString = "810b000c0120ffff00ff1008";
+        BacnetResponse bacnetResponse = BacnetMessageParser.parse(whoIsHexString);
+        assertNotNull(bacnetResponse);
+        Service service = bacnetResponse.getService();
+        assertNotNull(service);
+        assertTrue(service instanceof WhoIsService);
+    }
+
+    @Test
+    void whoIsWithLowHighRange() {
         String whoIsHexString = "810400180a3f510cbac00120ffff00ff10080a07ae1a07ae";
         BacnetResponse bacnetResponse = BacnetMessageParser.parse(whoIsHexString);
         assertNotNull(bacnetResponse);
@@ -74,5 +84,12 @@ class BacnetMessageParserTest {
         WhoIsService whoIsService = (WhoIsService)service;
         assertEquals(1966, whoIsService.getLowRangeLimit());
         assertEquals(1966, whoIsService.getHighRangeLimit());
+    }
+
+    @Test
+    void bugfix() {
+        String hexString = "810b00190120ffff00ff1000c4020000082205c491032201f6";
+        BacnetResponse bacnetResponse = BacnetMessageParser.parse(hexString);
+        assertNotNull(bacnetResponse);
     }
 }

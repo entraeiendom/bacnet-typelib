@@ -7,6 +7,7 @@ import no.entra.bacnet.services.BacnetParserException;
 import no.entra.bacnet.services.WhoIsService;
 
 import static no.entra.bacnet.utils.HexUtils.toInt;
+import static no.entra.bacnet.utils.StringUtils.hasValue;
 
 public class WhoIsServiceParser {
 
@@ -16,20 +17,27 @@ public class WhoIsServiceParser {
         WhoIsService whoIsService = new WhoIsService();
         parserResult.setParsedObject(whoIsService);
 
-        OctetReader whoIsReader = new OctetReader(hexString);
-        if (whoIsReader.hasNext()) {
-            SDContextTag sdContectTag = new SDContextTag(whoIsReader.next());
-            int length = sdContectTag.findLength();
-            String lowRangeHex = whoIsReader.next(length);
-            Integer lowRange = toInt(lowRangeHex);
-            whoIsService.setLowRangeLimit(lowRange);
+        if (hasValue(hexString)) {
+            OctetReader whoIsReader = new OctetReader(hexString);
             if (whoIsReader.hasNext()) {
-                sdContectTag = new SDContextTag(whoIsReader.next());
-                length = sdContectTag.findLength();
-                String highRangeHex = whoIsReader.next(length);
-                Integer highRange = toInt(highRangeHex);
-                whoIsService.setHighRangeLimit(highRange);
+                SDContextTag sdContectTag = new SDContextTag(whoIsReader.next());
+                int length = sdContectTag.findLength();
+                String lowRangeHex = whoIsReader.next(length);
+                Integer lowRange = toInt(lowRangeHex);
+                whoIsService.setLowRangeLimit(lowRange);
+                if (whoIsReader.hasNext()) {
+                    sdContectTag = new SDContextTag(whoIsReader.next());
+                    length = sdContectTag.findLength();
+                    String highRangeHex = whoIsReader.next(length);
+                    Integer highRange = toInt(highRangeHex);
+                    whoIsService.setHighRangeLimit(highRange);
+                    parserResult.setParsedOk(true);
+                } else {
+                    parserResult.setParsedOk(true);
+                }
             }
+        } else {
+            parserResult.setParsedOk(true);
         }
         return parserResult;
     }
