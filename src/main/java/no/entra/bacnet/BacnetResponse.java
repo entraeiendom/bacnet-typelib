@@ -6,6 +6,7 @@ public interface BacnetResponse<T> {
 
     int statusCode();
     Service getService();
+    Integer getInvokeId();
  /*
   int statusCode();
 

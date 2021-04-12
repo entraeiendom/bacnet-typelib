@@ -53,6 +53,11 @@ public class BacnetMessageParser {
                     public Service getService() {
                         return finalServiceParserResult.getParsedObject();
                     }
+
+                    @Override
+                    public Integer getInvokeId() {
+                        return apdu.getInvokeId();
+                    }
                 };
             }
 //            serviceChoice.isRequiringResponse(); //!= WhoIs, WhoHas ++ broadcasts
