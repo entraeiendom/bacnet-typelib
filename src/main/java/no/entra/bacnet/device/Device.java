@@ -162,4 +162,25 @@ public class Device {
     public Map<String, String> getProperties() {
         return properties;
     }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "id='" + id + '\'' +
+                ", ipAddress='" + ipAddress + '\'' +
+                ", portNumber=" + portNumber +
+                ", objectName='" + objectName + '\'' +
+                ", tfmTag='" + tfmTag + '\'' +
+                ", instanceNumber=" + instanceNumber +
+                ", macAdress='" + macAdress + '\'' +
+                ", vendorId='" + vendorId + '\'' +
+                ", supportsReadPropertyMultiple=" + supportsReadPropertyMultiple +
+                ", protocolVersion='" + protocolVersion + '\'' +
+                ", protocolRevision='" + protocolRevision + '\'' +
+                ", maxAPDULengthAccepted=" + maxAPDULengthAccepted +
+                ", segmentationSupported=" + segmentationSupported +
+                ", observedAt=" + observedAt +
+                ", properties=" + properties +
+                '}';
+    }
 }
