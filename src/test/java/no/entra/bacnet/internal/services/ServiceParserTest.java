@@ -39,7 +39,7 @@ class ServiceParserTest {
 
     @Test
     void whoIsService() {
-        String hexString = "810b000c0120ffff00ff1008";
+        String hexString = "0a07ae1a07ae";
         ParserResult<Service> parserResult = ServiceParser.parse(UnconfirmedServiceChoice.WhoIs, hexString);
         assertNotNull(parserResult);
         assertTrue(parserResult.isParsedOk());
