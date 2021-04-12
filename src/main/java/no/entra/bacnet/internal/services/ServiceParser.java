@@ -49,6 +49,15 @@ public class ServiceParser {
                         parserResult.setUnparsedHexString(iAmResult.getUnparsedHexString());
                     }
                     break;
+                case WhoIs:
+                    ParserResult<WhoIsService> whoIsResult = WhoIsServiceParser.parse(hexString);
+                    if (whoIsResult.isParsedOk()) {
+                        Service whoIsService = whoIsResult.getParsedObject();
+                        parserResult.setParsedObject(whoIsService);
+                        parserResult.setParsedOk(true);
+                        parserResult.setUnparsedHexString(whoIsResult.getUnparsedHexString());
+                    }
+                    break;
                 default:
                     //TODO
 

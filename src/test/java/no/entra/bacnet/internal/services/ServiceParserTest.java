@@ -37,6 +37,16 @@ class ServiceParserTest {
         assertEquals(vendor, iAmService.getVendor());
     }
 
+    @Test
+    void whoIsService() {
+        String hexString = "810b000c0120ffff00ff1008";
+        ParserResult<Service> parserResult = ServiceParser.parse(UnconfirmedServiceChoice.WhoIs, hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        Service parsedObject = parserResult.getParsedObject();
+        assertTrue(parsedObject instanceof WhoIsService);
+    }
+
     //FIXME is too complex for end user. Need more explicit typing in Service Interface.
     @Test
     void parseSingleObjectMultipleProperties() throws BacnetParserException {

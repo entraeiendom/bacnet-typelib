@@ -16,6 +16,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class ApduParserTest {
 
     @Test
+    void whoIsService()  {
+        String whoIsHexString = "810400180a3f510cbac00120ffff00ff10080a07ae1a07ae";
+        String whoIsApdu = "10080a07ae1a07ae";
+        ParserResult<Apdu> parserResult = ApduParser.parse(whoIsApdu);
+        Apdu apdu = parserResult.getParsedObject();
+        assertNotNull(apdu);
+        assertEquals(MessageType.UnconfirmedRequest, apdu.getMessageType());
+        assertEquals(UnconfirmedServiceChoice.WhoIs, apdu.getServiceChoice());
+        assertEquals("0a07ae1a07ae",parserResult.getUnparsedHexString());
+    }
+    @Test
     void iamService()  {
         String iamApdu = "1000c40200020f22040091002105";
         ParserResult<Apdu> parserResult = ApduParser.parse(iamApdu);

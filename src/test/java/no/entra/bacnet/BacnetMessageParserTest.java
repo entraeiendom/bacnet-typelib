@@ -9,6 +9,8 @@ import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectType;
 import no.entra.bacnet.properties.ReadPropertyMultipleService;
 import no.entra.bacnet.services.AbortService;
+import no.entra.bacnet.services.Service;
+import no.entra.bacnet.services.WhoIsService;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -17,8 +19,7 @@ import java.util.Map;
 
 import static no.entra.bacnet.internal.properties.ReadPropertyResultParser.ERROR_CLASS;
 import static no.entra.bacnet.internal.properties.ReadPropertyResultParser.ERROR_CODE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BacnetMessageParserTest {
 
@@ -60,5 +61,18 @@ class BacnetMessageParserTest {
         assertNotNull(response.getService());
         assertEquals(0, response.getInvokeId());
         AbortService service = (AbortService) response.getService();
+    }
+
+    @Test
+    void whoIsService() {
+        String whoIsHexString = "810400180a3f510cbac00120ffff00ff10080a07ae1a07ae";
+        BacnetResponse bacnetResponse = BacnetMessageParser.parse(whoIsHexString);
+        assertNotNull(bacnetResponse);
+        Service service = bacnetResponse.getService();
+        assertNotNull(service);
+        assertTrue(service instanceof WhoIsService);
+        WhoIsService whoIsService = (WhoIsService)service;
+        assertEquals(1966, whoIsService.getLowRangeLimit());
+        assertEquals(1966, whoIsService.getHighRangeLimit());
     }
 }
