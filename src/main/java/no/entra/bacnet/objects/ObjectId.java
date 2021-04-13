@@ -3,6 +3,8 @@ package no.entra.bacnet.objects;
 import no.entra.bacnet.internal.objects.ObjectIdMapper;
 import org.slf4j.Logger;
 
+import java.util.Objects;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ObjectId {
@@ -61,5 +63,10 @@ public class ObjectId {
             return isEqual;
         }
         return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getObjectType(), getInstanceNumber());
     }
 }

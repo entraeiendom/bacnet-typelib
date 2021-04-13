@@ -7,4 +7,5 @@ public class DeviceId extends ObjectId {
     public DeviceId(Integer instanceNumber) {
         super(ObjectType.Device, instanceNumber);
     }
+
 }
