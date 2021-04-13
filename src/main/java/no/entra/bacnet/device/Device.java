@@ -1,9 +1,11 @@
 package no.entra.bacnet.device;
 
 import no.entra.bacnet.internal.properties.Property;
+import no.entra.bacnet.objects.ObjectId;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Device {
@@ -22,6 +24,7 @@ public class Device {
     private boolean segmentationSupported;
     private Instant observedAt;
     private Map<String, String> properties = new HashMap<>();
+    private Map<ObjectId, List<Property>> devicesSensorsActuators = new HashMap<>();
 
     public String getId() {
         return id;
@@ -161,6 +164,23 @@ public class Device {
 
     public Map<String, String> getProperties() {
         return properties;
+    }
+
+    public Map<ObjectId, List<Property>> getDevicesSensorsActuators() {
+        return devicesSensorsActuators;
+    }
+
+    public void setDevicesSensorsActuators(Map<ObjectId, List<Property>> devicesSensorsActuators) {
+        this.devicesSensorsActuators = devicesSensorsActuators;
+    }
+    public void addDeviceSensorActuator(ObjectId objectId, List<Property> properties) {
+        devicesSensorsActuators.put(objectId, properties);
+    }
+
+    public void addDeviceSensorActuatorProperty(ObjectId objectId, Property property) {
+        List<Property> properties = devicesSensorsActuators.get(objectId);
+        properties.add(property);
+        devicesSensorsActuators.put(objectId, properties);
     }
 
     @Override
