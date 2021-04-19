@@ -1,5 +1,7 @@
 package no.entra.bacnet.internal.parseandmap;
 
+import java.util.List;
+
 public class ParserResult<T> {
 
     private T parsedObject;
@@ -8,6 +10,7 @@ public class ParserResult<T> {
     private String initialHexString = "";
     private String unparsedHexString = "";
     private String errorMessage = null;
+    private List<T> listOfObjects;
 
     public ParserResult() {
     }
@@ -30,6 +33,14 @@ public class ParserResult<T> {
 
     public T getParsedObject() {
         return parsedObject;
+    }
+
+    public List<T> getListOfObjects() {
+        return listOfObjects;
+    }
+
+    public void setListOfObjects(List<T> listOfObjects) {
+        this.listOfObjects = listOfObjects;
     }
 
     public void setNumberOfOctetsRead(int numberOfOctetsRead) {

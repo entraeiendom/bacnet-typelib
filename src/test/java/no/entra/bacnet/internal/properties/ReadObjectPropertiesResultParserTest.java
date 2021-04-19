@@ -103,6 +103,73 @@ With Array
   ]
 }
 HexString: 0c020000081e294c39014ec4020000084f294c39024ec4008000004f294c39034e1f
+----
+One Device, multiple objects with multiple properties
+{
+  "objectId": "Device, 8",
+  "results": [
+    {
+      "objectId": "analog-value, 0",
+      "results": [
+        {
+          "property-identifier": "object-name",
+          "read-result": {
+            "Object Name": "UI1_ZoneTemperature"
+          }
+        },
+        {
+          "property-identifier": "description",
+          "read-result": {
+            "description": "Analog Value 0"
+          }
+        },
+        {
+          "property-identifier": "units",
+          "read-result": {
+            "units": "No Units"
+          }
+        },
+        {
+          "property-identifier": "present-value",
+          "read-result": {
+            "Present Value": 22.3999862670898
+          }
+        }
+      ]
+    },
+    {
+      "objectId": "analog-value, 1",
+      "results": [
+        {
+          "property-identifier": "object-name",
+          "read-result": {
+            "Object Name": "UI2_ZoneTemperature"
+          }
+        },
+        {
+          "property-identifier": "description",
+          "read-result": {
+            "description": "Analog Value 0"
+          }
+        },
+        {
+          "property-identifier": "units",
+          "read-result": {
+            "units": "No Units"
+          }
+        },
+        {
+          "property-identifier": "present-value",
+          "read-result": {
+            "Present Value": 22.3999862670898
+          }
+        }
+      ]
+    }
+  ]
+}
+
+HexString: 0c020000081e294d4e75060046574643554f291c4e751800465720536572696573204261636e6574204465766963654f29755e910291205f29555e910291205f1f0c008000001e294d4e7514005549315f5a6f6e6554656d70657261747572654f291c4e750f00416e616c6f672056616c756520304f29754e915f4f29554e4441b3332c4f1f0c008000011e294d4e7519005549325f44697363686172676554656d70657261747572654f291c4e750f00416e616c6f672056616c756520314f29754e915f4f29554e4441acccf84f1f
  */
 class ReadObjectPropertiesResultParserTest {
 
@@ -165,9 +232,122 @@ class ReadObjectPropertiesResultParserTest {
         assertEquals(expectedObjectId, resultList.get(1).getReadResult().get(PropertyIdentifier.ObjectList));
     }
 
+//    @Test
+//    void unparsableHexString() {
+//        String hexString = "0000";
+//        assertThrows(BacnetParserException.class, () -> ReadObjectPropertiesResultParser.parse(hexString));
+//    }
+
+    /*
+    One Device, multiple objects with multiple properties
+    [
+  {
+    "objectId": "device, 8",
+    "results": [
+      {
+        "property-identifier": "object-name",
+        "read-result": {
+          "Object Name": "FWFCU"
+        }
+      },
+      {
+        "property-identifier": "description",
+        "read-result": {
+          "description": "FW Series Bacnet Device"
+        }
+      },
+      {
+        "property-identifier": "units",
+        "read-result": {
+          "propertyAccessError": {
+            "errorClass": "property",
+            "errorCode": "unknown-property"
+          }
+        }
+      },
+      {
+        "property-identifier": "present-value",
+        "read-result": {
+          "propertyAccessError": {
+            "errorClass": "property",
+            "errorCode": "unknown-property"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "objectId": "analog-value, 0",
+    "results": [
+      {
+        "property-identifier": "object-name",
+        "read-result": {
+          "Object Name": "UI1_ZoneTemperature"
+        }
+      },
+      {
+        "property-identifier": "description",
+        "read-result": {
+          "description": "Analog Value 0"
+        }
+      },
+      {
+        "property-identifier": "units",
+        "read-result": {
+          "units": "No Units"
+        }
+      },
+      {
+        "property-identifier": "present-value",
+        "read-result": {
+          "Present Value": 22.3999862670898
+        }
+      }
+    ]
+  },
+  {
+    "objectId": "analog-value, 1",
+    "results": [
+      {
+        "property-identifier": "object-name",
+        "read-result": {
+          "Object Name": "UI2_DischargeTemperature"
+        }
+      },
+      {
+        "property-identifier": "description",
+        "read-result": {
+          "description": "Analog Value 0"
+        }
+      },
+      {
+        "property-identifier": "units",
+        "read-result": {
+          "units": "No Units"
+        }
+      },
+      {
+        "property-identifier": "present-value",
+        "read-result": {
+          "Present Value": 22.3999862670898
+        }
+      }
+    ]
+  }
+]
+HexString: 0c020000081e294d4e75060046574643554f291c4e751800465720536572696573204261636e6574204465766963654f29755e910291205f29555e910291205f1f0c008000001e294d4e7514005549315f5a6f6e6554656d70657261747572654f291c4e750f00416e616c6f672056616c756520304f29754e915f4f29554e4441b3332c4f1f0c008000011e294d4e7519005549325f44697363686172676554656d70657261747572654f291c4e750f00416e616c6f672056616c756520314f29754e915f4f29554e4441acccf84f1f
+     */
     @Test
-    void unparsableHexString() {
-        String hexString = "0000";
-        assertThrows(BacnetParserException.class, () -> ReadObjectPropertiesResultParser.parse(hexString));
+    void oneDeviceMultipleObjectsWithMultipleProperties() throws BacnetParserException {
+//        String hexString = "0c020000081e294d4e75060046574643554f291c4e751800465720536572696573204261636e6574204465766963654f29755e910291205f29555e910291205f1f0c008000001e294d4e7514005549315f5a6f6e6554656d70657261747572654f291c4e750f00416e616c6f672056616c756520304f29754e915f4f29554e4441b3332c4f1f0c008000011e294d4e7519005549325f44697363686172676554656d70657261747572654f291c4e750f00416e616c6f672056616c756520314f29754e915f4f29554e4441acccf84f1f";
+        String hexString = "0c020000081e294d4e75060046574643554f291c4e751800465720536572696573204261636e6574204465766963654f29755e910291205f29555e910291205f1f0c008000001e294d4e7514005549315f5a6f6e6554656d70657261747572654f291c4e750f00416e616c6f672056616c756520304f29754e915f4f29554e4441b3332c4f1f0c008000011e294d4e7519005549325f44697363686172676554656d70657261747572654f291c4e750f00416e616c6f672056616c756520314f29754e915f4f29554e4441acccf84f1f";
+        ParserResult<ReadObjectPropertiesResult> parserResult = ReadObjectPropertiesResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        assertEquals(208, parserResult.getNumberOfOctetsRead());
+        assertEquals("", parserResult.getUnparsedHexString());
+        assertNull( parserResult.getParsedObject());
+        assertEquals(3, parserResult.getListOfObjects().size());
+        assertEquals("UI2_DischargeTemperature", parserResult.getListOfObjects().get(2).getResults().get(0).getReadResult().get(PropertyIdentifier.ObjectName));
+
     }
 }
