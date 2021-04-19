@@ -84,11 +84,18 @@ public class ServiceParser {
                     ParserResult<ReadObjectPropertiesResult> readPropertyMultipleResult = ReadObjectPropertiesResultParser.parse(hexString);
                     if (readPropertyMultipleResult.isParsedOk()) {
                         ReadObjectPropertiesResult objectPropertiesResult = readPropertyMultipleResult.getParsedObject();
-                        ObjectId objectId = objectPropertiesResult.getObjectId();
                         ReadPropertyMultipleService readPropertyMultipleService = new ReadPropertyMultipleService();
-                        readPropertyMultipleService.setObjectId(objectId);
                         ReadPropertyMultipleResponse response = new ReadPropertyMultipleResponse();
-                        response.addReadObjectPropertiesResult(objectPropertiesResult);
+                        if (objectPropertiesResult != null) {
+                            ObjectId objectId = objectPropertiesResult.getObjectId();
+                            readPropertyMultipleService.setObjectId(objectId);
+
+                            response.addReadObjectPropertiesResult(objectPropertiesResult);
+                        } else {
+                            for (ReadObjectPropertiesResult readObjectPropertiesResult : readPropertyMultipleResult.getListOfObjects()) {
+                                response.addReadObjectPropertiesResult(readObjectPropertiesResult);
+                            }
+                        }
                         readPropertyMultipleService.setReadPropertyMultipleResponse(response);
                         parserResult.setParsedObject(readPropertyMultipleService);
                         parserResult.setParsedOk(true);
