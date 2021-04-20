@@ -1,6 +1,9 @@
 package no.entra.bacnet.internal.property;
 
+import no.entra.bacnet.internal.apdu.ApplicationTag;
+import no.entra.bacnet.internal.apdu.MeasurementUnit;
 import no.entra.bacnet.internal.apdu.SDContextTag;
+import no.entra.bacnet.internal.apdu.ValueType;
 import no.entra.bacnet.internal.objects.ObjectIdMapper;
 import no.entra.bacnet.internal.octet.OctetReader;
 import no.entra.bacnet.internal.parseandmap.ParserResult;
@@ -10,6 +13,9 @@ import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.services.BacnetParserException;
 import org.slf4j.Logger;
 
+import static no.entra.bacnet.internal.apdu.SDContextTag.TAG3START;
+import static no.entra.bacnet.internal.parseandmap.StringParser.parseCharStringExtended;
+import static no.entra.bacnet.utils.HexUtils.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReadSinglePropertyResultParser {
@@ -51,6 +57,78 @@ public class ReadSinglePropertyResultParser {
         final Octet propertyIdentifierOctet = propertyReader.next();
         PropertyIdentifier propertyIdentifier = PropertyIdentifier.fromOctet(propertyIdentifierOctet);
         propertyResult.setPropertyIdentifier(propertyIdentifier);
+
+        //3 Read Optional Property Array Index
+        Octet sdContextTag = propertyReader.next();
+        if (sdContextTag.getFirstNibble() == SDContextTag.TAG2LENGTH1.getFirstNibble()) {
+            SDContextTag arrayIndexTag = new SDContextTag(sdContextTag);
+            int numberofOctets = arrayIndexTag.findLength();
+            String numberHex = propertyReader.next(numberofOctets);
+            int arrayIndexNumber = toInt(numberHex);
+            propertyResult.setArrayIndexNumber(arrayIndexNumber);
+        }
+
+        //4 Read Property Value
+//        Octet readResultOctet = propertyReader.next();
+        //property-value
+        if (sdContextTag.equals(TAG3START)) {
+            Octet applicationTagOctet = propertyReader.next();
+            ApplicationTag applicationTag = new ApplicationTag(applicationTagOctet);
+            Object value = null;
+            int length = 0;
+            ValueType valueType = applicationTag.findValueType();
+            switch (valueType) {
+                case BitString:
+                    if (applicationTagOctet.getSecondNibble() == '5') {
+                        //extended
+                        length = toInt(propertyReader.next());
+                        String bitStringHex = propertyReader.next(length);
+                        String bitString = toBitString(bitStringHex);
+                        propertyResult.setValue(bitString);
+                        break;
+                    }else {
+                        parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+                        parserResult.setErrorMessage("Do not know how to Parse BitString with applicationOcetet of " + applicationTagOctet);
+                        parserResult.setParsedOk(false);
+                        throw new BacnetParserException("Do not know how to Parse BitString with applicationOcetet of " + applicationTagOctet, parserResult);
+                    }
+
+                case Float:
+                    length = applicationTag.findLength();
+                    value = toFloat(propertyReader.next(length));
+                    propertyResult.setValue(value);
+                    break;
+                case Long:
+                case Integer:
+                    length = applicationTag.findLength();
+                    value = toInt(propertyReader.nextOctets(length));
+                    propertyResult.setValue(value);
+                    break;
+                case ObjectIdentifier:
+                    objectIdHexString = propertyReader.next(4);
+                    ParserResult<ObjectId> idResult = ObjectIdMapper.parse(objectIdHexString);
+                    ObjectId propertyObjectId = idResult.getParsedObject();
+                    propertyResult.setValue(propertyObjectId);
+                    break;
+                case CharString:
+                    if (applicationTagOctet.getSecondNibble() == '5') {
+                        ParserResult<String> stringResult = parseCharStringExtended(propertyReader.unprocessedHexString());
+                        String text = stringResult.getParsedObject();
+                        propertyResult.setValue(text);
+                        propertyReader.next(stringResult.getNumberOfOctetsRead());
+                    }
+                    break;
+                case Enumerated:
+                    length = applicationTag.findLength();
+                    Octet measurementUnitOctet = propertyReader.next();
+                    MeasurementUnit measurementUnit = MeasurementUnit.fromOctet(measurementUnitOctet);
+                    propertyResult.setValue(measurementUnit);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Not implemented yet, " + valueType);
+            }
+        }
+
         parserResult.setParsedObject(propertyResult);
         return parserResult;
 

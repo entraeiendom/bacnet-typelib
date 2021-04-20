@@ -54,4 +54,11 @@ class HexUtilsTest {
         byte[] expectedArray = new byte[] {-127, 11, 0, 12, 1, 32, -1, -1, 0, -1, 16, 8};
         assertTrue(Arrays.equals(expectedArray, bytesAsIntArr));
     }
+
+    @Test
+    void hexStringToBitString() {
+        String hexString = "07000bc000f800";
+        String expected = "00000111000000000000101111000000000000001111100000000000";
+        assertEquals(expected, HexUtils.toBitString(hexString));
+    }
 }

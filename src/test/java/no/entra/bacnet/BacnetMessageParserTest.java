@@ -92,4 +92,27 @@ class BacnetMessageParserTest {
         BacnetResponse bacnetResponse = BacnetMessageParser.parse(hexString);
         assertNotNull(bacnetResponse);
     }
+    //FIXME
+    @Test
+    void readPropertyServicesSupported() {
+        String hexString = "810a001b010030050c0c0200000819613e850707000bc000f8003f";
+        BacnetResponse bacnetResponse = BacnetMessageParser.parse(hexString);
+        //protocol-services-supported: (Bit String) (FFFFFFFFFFFFTFTTTTFFFFFFFFFFFFFFTTTTTFFFF)
+//        assertEquals(deviceId, bacnetResponse.getService().getObjectId());
+//        assertEquals(ReadPropertyService.class, bacnetResponse.getService().getClass());
+//        assertEquals(PropertyIdentifier.ProtocolServicesSupported, null);
+        /*
+        assertTrue(readProperty);
+        assertFalse(readPropertyConditional);
+        assertTrue(readPropertyMultiple);
+        assertTrue(writeProperty);
+        assertTrue(writePropertyMultiple);
+        assertTrue(timeSyncronization);
+        assertTrue(whoHas);
+        assertTrue(whoIs);
+        assertTrue(readRange);
+        assertNotNull(bacnetResponse);
+
+         */
+    }
 }

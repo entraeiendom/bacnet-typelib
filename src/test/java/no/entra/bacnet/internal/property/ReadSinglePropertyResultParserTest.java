@@ -23,5 +23,6 @@ class ReadSinglePropertyResultParserTest {
         assertNotNull(parserResult);
         assertEquals(new DeviceId(8),parserResult.getParsedObject().getObjectId());
         assertEquals(PropertyIdentifier.ProtocolServicesSupported, parserResult.getParsedObject().getPropertyIdentifier());
+        assertEquals("00000111000000000000101111000000000000001111100000000000", parserResult.getParsedObject().getValue());
     }
 }
