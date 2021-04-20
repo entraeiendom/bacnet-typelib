@@ -3,9 +3,12 @@ package no.entra.bacnet.internal.services;
 import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.internal.properties.ReadObjectPropertiesResult;
 import no.entra.bacnet.internal.properties.ReadObjectPropertiesResultParser;
+import no.entra.bacnet.internal.property.ReadSinglePropertyResult;
+import no.entra.bacnet.internal.property.ReadSinglePropertyResultParser;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.properties.ReadPropertyMultipleResponse;
 import no.entra.bacnet.properties.ReadPropertyMultipleService;
+import no.entra.bacnet.property.ReadPropertyService;
 import no.entra.bacnet.services.*;
 import org.slf4j.Logger;
 
@@ -80,6 +83,10 @@ public class ServiceParser {
         try {
             switch (serviceChoice) {
 
+                case ReadProperty:
+                    ParserResult<ReadSinglePropertyResult> readSinglePropertyResult = ReadSinglePropertyResultParser.parse(hexString);
+                    ReadPropertyService readPropertyService = new ReadPropertyService();
+                    break;
                 case ReadPropertyMultiple:
                     ParserResult<ReadObjectPropertiesResult> readPropertyMultipleResult = ReadObjectPropertiesResultParser.parse(hexString);
                     if (readPropertyMultipleResult.isParsedOk()) {
@@ -99,6 +106,8 @@ public class ServiceParser {
                         readPropertyMultipleService.setReadPropertyMultipleResponse(response);
                         parserResult.setParsedObject(readPropertyMultipleService);
                         parserResult.setParsedOk(true);
+                    } else {
+                        log.trace("Failed to parse ReadProperty or ReadPropertyMultiple. Result is {}. ServiceChoice: {}", readPropertyMultipleResult, serviceChoice);
                     }
                     break;
                 default:
