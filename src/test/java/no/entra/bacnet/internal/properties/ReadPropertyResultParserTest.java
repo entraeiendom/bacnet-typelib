@@ -128,4 +128,15 @@ class ReadPropertyResultParserTest {
         assertEquals(PropertyIdentifier.PresentValue, readPropertyResult.getPropertyIdentifier());
         assertEquals(Float.parseFloat("22.3999862670898"), readPropertyResult.getReadResult().get(PropertyIdentifier.PresentValue));
     }
+
+    @Test
+    void presentValueBoolean() throws BacnetParserException {
+        String hexString = "29554e104f";
+        ParserResult<ReadPropertyResult> parserResult = ReadPropertyResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        ReadPropertyResult readPropertyResult = parserResult.getParsedObject();
+        assertEquals(PropertyIdentifier.PresentValue, readPropertyResult.getPropertyIdentifier());
+        assertEquals(false, readPropertyResult.getReadResult().get(PropertyIdentifier.PresentValue));
+    }
 }

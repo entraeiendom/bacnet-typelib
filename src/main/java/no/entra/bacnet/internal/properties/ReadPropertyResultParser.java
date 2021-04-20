@@ -100,8 +100,14 @@ public class ReadPropertyResultParser {
 
             ValueType valueType = applicationTag.findValueType();
             switch (valueType) {
-                case Float:
+                case Boolean:
                     int length = applicationTag.findLength();
+                    if (length == 0) {
+                        readPropertyResult.addReadResult(propertyIdentifier, Boolean.FALSE);
+                    }
+                    break;
+                case Float:
+                    length = applicationTag.findLength();
                     value = toFloat(propertyReader.next(length));
                     readPropertyResult.addReadResult(propertyIdentifier, value);
                     break;

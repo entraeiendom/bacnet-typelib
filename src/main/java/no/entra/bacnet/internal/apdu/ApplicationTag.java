@@ -40,6 +40,9 @@ public class ApplicationTag {
         int length = -1;
         char nibble = appliationTag.getSecondNibble();
         switch (nibble) {
+            case '0':
+                length = 0;
+                break;
             case '1':
                 length = 1;
                 break;
