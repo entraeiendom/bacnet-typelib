@@ -8,6 +8,7 @@ import no.entra.bacnet.internal.property.ReadSinglePropertyResultParser;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.properties.ReadPropertyMultipleResponse;
 import no.entra.bacnet.properties.ReadPropertyMultipleService;
+import no.entra.bacnet.property.ReadPropertyResponse;
 import no.entra.bacnet.property.ReadPropertyService;
 import no.entra.bacnet.services.*;
 import org.slf4j.Logger;
@@ -84,8 +85,19 @@ public class ServiceParser {
             switch (serviceChoice) {
 
                 case ReadProperty:
-                    ParserResult<ReadSinglePropertyResult> readSinglePropertyResult = ReadSinglePropertyResultParser.parse(hexString);
-                    ReadPropertyService readPropertyService = new ReadPropertyService();
+                    ParserResult<ReadSinglePropertyResult> readSingleParserResult = ReadSinglePropertyResultParser.parse(hexString);
+                    if (parserResult.isParsedOk()) {
+                        ReadPropertyService readPropertyService = new ReadPropertyService();
+                        ReadSinglePropertyResult readSinglePropertyResult = readSingleParserResult.getParsedObject();
+                        ReadPropertyResponse response = new ReadPropertyResponse(readSinglePropertyResult);
+                        readPropertyService.setReadPropertyResponse(response);
+                        parserResult.setParsedObject(readPropertyService);
+                        parserResult.setParsedOk(true);
+                    } else {
+                        log.trace("Failed to parse ReadProperty. Result is {}. ServiceChoice: {}", readSingleParserResult, serviceChoice);
+                        parserResult.setErrorMessage("Failed to parse ReadProperty. Result is: " + readSingleParserResult + ", ServiceChoice: " + serviceChoice);
+                    }
+
                     break;
                 case ReadPropertyMultiple:
                     ParserResult<ReadObjectPropertiesResult> readPropertyMultipleResult = ReadObjectPropertiesResultParser.parse(hexString);
@@ -107,7 +119,7 @@ public class ServiceParser {
                         parserResult.setParsedObject(readPropertyMultipleService);
                         parserResult.setParsedOk(true);
                     } else {
-                        log.trace("Failed to parse ReadProperty or ReadPropertyMultiple. Result is {}. ServiceChoice: {}", readPropertyMultipleResult, serviceChoice);
+                        log.trace("Failed to parse ReadPropertyMultiple. Result is {}. ServiceChoice: {}", readPropertyMultipleResult, serviceChoice);
                     }
                     break;
                 default:

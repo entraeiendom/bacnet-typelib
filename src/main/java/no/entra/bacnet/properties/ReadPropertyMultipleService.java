@@ -137,7 +137,7 @@ public class ReadPropertyMultipleService extends BacnetRequest implements Servic
 
     @Override
     public boolean expectReply() {
-        return false;
+        return true;
     }
 
     public static ReadPropertyMultipleService parse(String hexString) {

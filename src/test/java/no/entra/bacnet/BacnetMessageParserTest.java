@@ -1,13 +1,17 @@
 package no.entra.bacnet;
 
+import no.entra.bacnet.device.DeviceId;
 import no.entra.bacnet.error.ErrorClassType;
 import no.entra.bacnet.error.ErrorCodeType;
 import no.entra.bacnet.internal.properties.PropertyIdentifier;
 import no.entra.bacnet.internal.properties.ReadObjectPropertiesResult;
 import no.entra.bacnet.internal.properties.ReadPropertyResult;
+import no.entra.bacnet.internal.property.ReadSinglePropertyResult;
 import no.entra.bacnet.objects.ObjectId;
 import no.entra.bacnet.objects.ObjectType;
 import no.entra.bacnet.properties.ReadPropertyMultipleService;
+import no.entra.bacnet.property.ReadPropertyResponse;
+import no.entra.bacnet.property.ReadPropertyService;
 import no.entra.bacnet.services.AbortService;
 import no.entra.bacnet.services.Service;
 import no.entra.bacnet.services.WhoIsService;
@@ -43,7 +47,7 @@ class BacnetMessageParserTest {
 
 
         Map errorMap = new HashMap();
-        errorMap.put(ERROR_CLASS,ErrorClassType.property);
+        errorMap.put(ERROR_CLASS, ErrorClassType.property);
         errorMap.put(ERROR_CODE, ErrorCodeType.UnknownProperty);
         assertEquals(PropertyIdentifier.Units, resultList.get(2).getPropertyIdentifier());
         assertEquals(null, resultList.get(2).getReadResult().get(PropertyIdentifier.Units));
@@ -81,7 +85,7 @@ class BacnetMessageParserTest {
         Service service = bacnetResponse.getService();
         assertNotNull(service);
         assertTrue(service instanceof WhoIsService);
-        WhoIsService whoIsService = (WhoIsService)service;
+        WhoIsService whoIsService = (WhoIsService) service;
         assertEquals(1966, whoIsService.getLowRangeLimit());
         assertEquals(1966, whoIsService.getHighRangeLimit());
     }
@@ -92,27 +96,19 @@ class BacnetMessageParserTest {
         BacnetResponse bacnetResponse = BacnetMessageParser.parse(hexString);
         assertNotNull(bacnetResponse);
     }
-    //FIXME
+
     @Test
     void readPropertyServicesSupported() {
         String hexString = "810a001b010030050c0c0200000819613e850707000bc000f8003f";
         BacnetResponse bacnetResponse = BacnetMessageParser.parse(hexString);
-        //protocol-services-supported: (Bit String) (FFFFFFFFFFFFTFTTTTFFFFFFFFFFFFFFTTTTTFFFF)
-//        assertEquals(deviceId, bacnetResponse.getService().getObjectId());
-//        assertEquals(ReadPropertyService.class, bacnetResponse.getService().getClass());
-//        assertEquals(PropertyIdentifier.ProtocolServicesSupported, null);
-        /*
-        assertTrue(readProperty);
-        assertFalse(readPropertyConditional);
-        assertTrue(readPropertyMultiple);
-        assertTrue(writeProperty);
-        assertTrue(writePropertyMultiple);
-        assertTrue(timeSyncronization);
-        assertTrue(whoHas);
-        assertTrue(whoIs);
-        assertTrue(readRange);
-        assertNotNull(bacnetResponse);
+        Service service = bacnetResponse.getService();
+        assertNotNull(service);
+        ReadPropertyService propertyService = (ReadPropertyService) service;
+        ReadPropertyResponse readPropertyResponse = propertyService.getReadPropertyResponse();
+        ReadSinglePropertyResult result = readPropertyResponse.getResult();
+        assertEquals(PropertyIdentifier.ProtocolServicesSupported, result.getPropertyIdentifier());
+        assertEquals(new DeviceId(8), result.getObjectId() );
+        assertEquals("00000111000000000000101111000000000000001111100000000000", result.getValue());
 
-         */
     }
 }
