@@ -169,4 +169,15 @@ class ApduParserTest {
         assertFalse(ApduParser.expectServiceChoiceOctet(MessageType.Reject));
         assertFalse(ApduParser.expectServiceChoiceOctet(MessageType.SegmentACK));
     }
+
+    @Test
+    void segmentAckTest() {
+        String hexString = "40290009";
+        ParserResult<Apdu> parserResult = ApduParser.parse(hexString);
+        Apdu apdu = parserResult.getParsedObject();
+        assertFalse(apdu.getSenderIsServer());
+        assertEquals(41, apdu.getInvokeId());
+        assertEquals(0, apdu.getSequenceNumber());
+        assertEquals(9, apdu.getProposedWindowSize());
+    }
 }
