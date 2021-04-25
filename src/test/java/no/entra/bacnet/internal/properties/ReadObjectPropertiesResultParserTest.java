@@ -1,5 +1,6 @@
 package no.entra.bacnet.internal.properties;
 
+import no.entra.bacnet.device.DeviceId;
 import no.entra.bacnet.internal.apdu.MeasurementUnit;
 import no.entra.bacnet.internal.parseandmap.ParserResult;
 import no.entra.bacnet.objects.ObjectId;
@@ -349,5 +350,24 @@ HexString: 0c020000081e294d4e75060046574643554f291c4e751800465720536572696573204
         assertEquals(3, parserResult.getListOfObjects().size());
         assertEquals("UI2_DischargeTemperature", parserResult.getListOfObjects().get(2).getResults().get(0).getReadResult().get(PropertyIdentifier.ObjectName));
 
+    }
+
+    @Test
+    void emptyDescription() throws BacnetParserException {
+        String hexString = "0c020000081e294d4e75060046574643554f291c4e71044f1f";
+        ParserResult<ReadObjectPropertiesResult> parserResult = ReadObjectPropertiesResultParser.parse(hexString);
+        assertNotNull(parserResult);
+
+        //Expecting list of 20 objectPropertiesResult
+        List<ReadObjectPropertiesResult> objectPropertiesResults = parserResult.getListOfObjects();
+        assertEquals(1, objectPropertiesResults.size());
+        //First element is Device 8
+        ReadObjectPropertiesResult device8Result = objectPropertiesResults.get(0);
+        assertEquals(new DeviceId(8), device8Result.getObjectId());
+        assertEquals(PropertyIdentifier.ObjectName, device8Result.getResults().get(0).getPropertyIdentifier());
+        assertEquals("FWFCU", device8Result.getResults().get(0).getReadResult().get(PropertyIdentifier.ObjectName));
+
+        assertEquals(PropertyIdentifier.Description, device8Result.getResults().get(1).getPropertyIdentifier());
+        assertEquals("", device8Result.getResults().get(1).getReadResult().get(PropertyIdentifier.Description));
     }
 }

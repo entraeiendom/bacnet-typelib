@@ -139,4 +139,16 @@ class ReadPropertyResultParserTest {
         assertEquals(PropertyIdentifier.PresentValue, readPropertyResult.getPropertyIdentifier());
         assertEquals(false, readPropertyResult.getReadResult().get(PropertyIdentifier.PresentValue));
     }
+
+    @Test
+    void emptyDescription() throws BacnetParserException {
+        String hexString = "291c4e71044f";
+        ParserResult<ReadPropertyResult> parserResult = ReadPropertyResultParser.parse(hexString);
+        assertNotNull(parserResult);
+        assertTrue(parserResult.isParsedOk());
+        ReadPropertyResult readPropertyResult = parserResult.getParsedObject();
+        assertEquals(PropertyIdentifier.Description, readPropertyResult.getPropertyIdentifier());
+        assertEquals("", readPropertyResult.getReadResult().get(PropertyIdentifier.Description));
+
+    }
 }

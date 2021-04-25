@@ -25,4 +25,25 @@ public class StringParser {
         ParserResult result = new ParserResult(text, numberOfOctetsRead);
         return result;
     }
+
+    public static ParserResult<String> parseCharString(String hexString, int valueOctetLength) {
+//        log.trace("Find Text from: {}", hexString);
+        OctetReader stringReader = new OctetReader(hexString);
+
+        Octet encoding = stringReader.next();
+        String text = null;
+        int numberOfOctetsRead = 0;
+        if (valueOctetLength > 1) {
+            String objectNameHex = stringReader.next(valueOctetLength - 1);
+//        log.trace("ObjectNameHex: {}", objectNameHex);
+            text = HexUtils.parseExtendedValue(encoding, objectNameHex);
+//        log.debug("The rest: {}", stringReader.unprocessedHexString());
+            numberOfOctetsRead = valueOctetLength + 1;
+        } else {
+            text = "";
+            numberOfOctetsRead = 1;
+        }
+        ParserResult result = new ParserResult(text, numberOfOctetsRead);
+        return result;
+    }
 }

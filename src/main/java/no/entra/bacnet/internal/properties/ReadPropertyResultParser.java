@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static no.entra.bacnet.internal.apdu.SDContextTag.*;
+import static no.entra.bacnet.internal.parseandmap.StringParser.parseCharString;
 import static no.entra.bacnet.internal.parseandmap.StringParser.parseCharStringExtended;
 import static no.entra.bacnet.utils.HexUtils.toFloat;
 import static no.entra.bacnet.utils.HexUtils.toInt;
@@ -127,6 +128,17 @@ public class ReadPropertyResultParser {
                     if (applicationTagOctet.getSecondNibble() == '5') {
                         ParserResult<String> stringResult = parseCharStringExtended(propertyReader.unprocessedHexString());
                         String text = stringResult.getParsedObject();
+                        if (text == null) {
+                            text = "";
+                        }
+                        readPropertyResult.addReadResult(propertyIdentifier, text);
+                        propertyReader.next(stringResult.getNumberOfOctetsRead());
+                    } else if (applicationTagOctet.getSecondNibble() == '1') {
+                        ParserResult<String> stringResult = parseCharString(propertyReader.unprocessedHexString(), 1);
+                        String text = stringResult.getParsedObject();
+                        if (text == null) {
+                            text = "";
+                        }
                         readPropertyResult.addReadResult(propertyIdentifier, text);
                         propertyReader.next(stringResult.getNumberOfOctetsRead());
                     }
