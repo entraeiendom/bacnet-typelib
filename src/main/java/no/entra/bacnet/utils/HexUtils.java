@@ -23,7 +23,7 @@ public class HexUtils {
 
     public static String parseExtendedValue(Octet encoding, String hexString) {
         String value = null;
-        log.debug("ObjectNameHex: {}", hexString);
+//        log.debug("ObjectNameHex: {}", hexString);
         if (encoding.equals(ENCODING_UCS_2)) {
             byte[] bytes = hexStringToByteArray(hexString);
             value = new String(bytes, StandardCharsets.UTF_16);

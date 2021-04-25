@@ -12,15 +12,15 @@ public class StringParser {
     private static final Logger log = getLogger(StringParser.class);
 
     public static ParserResult<String> parseCharStringExtended(String hexString) {
-        log.debug("Find Text from: {}", hexString);
+//        log.trace("Find Text from: {}", hexString);
         OctetReader stringReader = new OctetReader(hexString);
         Octet valueLength = stringReader.next();
         int valueOctetLength = parseInt(String.valueOf(valueLength), 16);
         Octet encoding = stringReader.next();
         String objectNameHex = stringReader.next(valueOctetLength - 1);
-        log.debug("ObjectNameHex: {}", objectNameHex);
+//        log.trace("ObjectNameHex: {}", objectNameHex);
         String text = HexUtils.parseExtendedValue(encoding, objectNameHex);
-        log.debug("The rest: {}", stringReader.unprocessedHexString());
+//        log.debug("The rest: {}", stringReader.unprocessedHexString());
         int numberOfOctetsRead = valueOctetLength + 1;
         ParserResult result = new ParserResult(text, numberOfOctetsRead);
         return result;

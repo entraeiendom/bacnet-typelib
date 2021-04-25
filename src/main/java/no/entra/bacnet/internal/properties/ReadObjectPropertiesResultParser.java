@@ -13,6 +13,7 @@ import java.util.List;
 
 import static no.entra.bacnet.internal.apdu.ArrayTag.ARRAY1_END;
 import static no.entra.bacnet.internal.apdu.ArrayTag.ARRAY1_START;
+import static no.entra.bacnet.utils.StringUtils.hasValue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /*
@@ -107,6 +108,13 @@ public class ReadObjectPropertiesResultParser {
         ReadObjectPropertiesResult readObjectPropertiesResult = null;
         List<ReadObjectPropertiesResult> readObjectPropertiesResultsList = new ArrayList<>();
         parserResult.setInitialHexString(hexString);
+        if (!hasValue(hexString))  {
+            throw new BacnetParserException("HexString must contain some data.", parserResult);
+        }
+        if (hexString.startsWith("81")) {
+            throw new BacnetParserException("Please remove BVLC, NPDU and APDU hexString before calling this method. Maybe try BacnetMessageParser.parse(hexString)?", parserResult);
+        }
+
         ObjectId objectId = null;
 //        List<ReadPropertyResult> readPropertyResults =  new ArrayList<>();
         OctetReader objectPropertiesReader = new OctetReader(hexString);
