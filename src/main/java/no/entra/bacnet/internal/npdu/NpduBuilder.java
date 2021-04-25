@@ -19,6 +19,12 @@ public class NpduBuilder {
     }
     public NpduBuilder() {
         this.version = Octet.fromHexString("01");
+        this.control = Octet.fromHexString("00");
+    }
+
+    public NpduBuilder withNormalMessage() {
+        this.control = Octet.fromHexString("00");
+        return this;
     }
 
     public NpduBuilder withExpectingReply() {

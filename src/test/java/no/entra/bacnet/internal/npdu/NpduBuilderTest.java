@@ -13,4 +13,13 @@ class NpduBuilderTest {
         Npdu expectingReply = new NpduBuilder().withExpectingReply().build();
         assertEquals(expectedHexString, expectingReply.toHexString());
     }
+
+    @Test
+    void normalMessage() {
+        String expectedHexString = "0100";
+        Npdu normalMessage = new NpduBuilder().build();
+        assertEquals(expectedHexString, normalMessage.toHexString());
+        normalMessage = new NpduBuilder().withNormalMessage().build();
+        assertEquals(expectedHexString, normalMessage.toHexString());
+    }
 }
