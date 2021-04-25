@@ -149,6 +149,7 @@ public class Apdu {
         private boolean segmented;//Used for all B//Used for all BacnetRequest that require a response. See ConfirmedServiceRequest. Response willacnetRequest that require a response. See ConfirmedServiceRequest. Response will
         private boolean hasMoreSegments;
         private boolean segmentedReplyAllowed;
+        private boolean senderIsServer;
 
         private ApduBuilder() {
         }
@@ -164,6 +165,7 @@ public class Apdu {
             apdu.isSegmented = segmented;
             apdu.hasMoreSegments = hasMoreSegments;
             apdu.isSegmentedReplyAllowed = segmentedReplyAllowed;
+            apdu.senderIsServer = senderIsServer;
             return apdu;
         }
 
@@ -192,6 +194,13 @@ public class Apdu {
             this.maxApduLengthAccepted = maxApduLengthAccepted;
             return this;
         }
+
+        public ApduBuilder withSenderIsServer(boolean senderIsServer) {
+            this.senderIsServer = senderIsServer;
+            return this;
+        }
+
+
 
 
         public ApduBuilder isSegmented(boolean segmented) {
