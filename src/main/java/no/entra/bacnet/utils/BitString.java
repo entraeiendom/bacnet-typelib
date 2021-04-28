@@ -31,8 +31,12 @@ public class BitString {
         }
     }
 
+    /**
+     *
+     * @param position start counting on 1 from left to right, or right to left. see: isRightToLeft()
+     */
     public boolean isBitSet(int position) {
-        return bits[position];
+        return bits[position-1];
     }
 
     public boolean isRightToLeft() {
@@ -49,7 +53,7 @@ public class BitString {
     public int toInt() {
         String bitString = "";
         if (rightToLeft) {
-            for (int i = bits.length -1; i >= 0; i--) {
+            for (int i = bits.length -1; i > 0; i--) {
                 if (isBitSet(i)) {
                     bitString = bitString + "1";
                 } else {
@@ -84,7 +88,7 @@ public class BitString {
     public String toString() {
         String bitString = "";
         if (rightToLeft) {
-            for (int i = bits.length -1 ; i >= 0; i--) {
+            for (int i = bits.length ; i > 0; i--) {
                 if (isBitSet(i)) {
                     bitString = bitString + "1";
                 } else {

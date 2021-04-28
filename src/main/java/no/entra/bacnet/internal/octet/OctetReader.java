@@ -68,7 +68,7 @@ public class OctetReader {
             if (hasNext()) {
                 nextString += next().toString();
             } else {
-                throw new IllegalStateException("You requested: " + numberOfOctets + ". Only " + (i +1) + " is available.");
+                throw new IllegalStateException("You requested: " + numberOfOctets + " octets. Only " + (i +1) + " is available.");
             }
         }
         return nextString;
@@ -80,7 +80,7 @@ public class OctetReader {
             if (hasNext()) {
                 nextOctets.add(next());
             } else {
-                throw new IllegalStateException("You requested: " + numberOfOctets + ". Only " + (i +1) + " is available.");
+                throw new IllegalStateException("You requested: " + numberOfOctets + " octets. Only " + (i +1) + " is available.");
             }
         }
         Octet[] arr = new Octet[nextOctets.size()];

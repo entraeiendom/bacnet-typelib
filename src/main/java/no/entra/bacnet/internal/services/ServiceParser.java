@@ -101,6 +101,7 @@ public class ServiceParser {
                     break;
                 case ReadPropertyMultiple:
                     ParserResult<ReadObjectPropertiesResult> readPropertyMultipleResult = ReadObjectPropertiesResultParser.parse(hexString);
+
                     if (readPropertyMultipleResult.isParsedOk()) {
                         ReadObjectPropertiesResult objectPropertiesResult = readPropertyMultipleResult.getParsedObject();
                         ReadPropertyMultipleService readPropertyMultipleService = new ReadPropertyMultipleService();
@@ -120,6 +121,10 @@ public class ServiceParser {
                         parserResult.setParsedOk(true);
                     } else {
                         log.trace("Failed to parse ReadPropertyMultiple. Result is {}. ServiceChoice: {}", readPropertyMultipleResult, serviceChoice);
+                        parserResult.setParsedOk(false);
+                        parserResult.setErrorMessage("Failed to parse ReadPropertyMultiple. Result is: " + readPropertyMultipleResult + ", ServiceChoice: " + serviceChoice);
+                        parserResult.setNumberOfOctetsRead(readPropertyMultipleResult.getNumberOfOctetsRead());
+                        parserResult.setUnparsedHexString(readPropertyMultipleResult.getUnparsedHexString());
                     }
                     break;
                 default:

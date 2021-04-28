@@ -74,124 +74,132 @@ public class ReadPropertyResultParser {
             parserResult.setParsedOk(false);
             throw new BacnetParserException("PropertyResult must start with SD-ContextTag 2. Value is: " + sdContextTag2, parserResult);
         }
+
         ReadPropertyResult readPropertyResult = null;
         final Octet propertyIdentifierOctet = propertyReader.next();
         PropertyIdentifier propertyIdentifier = PropertyIdentifier.fromOctet(propertyIdentifierOctet);
         readPropertyResult = new ReadPropertyResult(propertyIdentifier);
 
-        //If property identifier is an array, check if array index is included
-        if (propertyIdentifier.equals(PropertyIdentifier.ObjectList)) {
-            Octet arrayIndexTag = propertyReader.next();
+        try {
+            //If property identifier is an array, check if array index is included
+            if (propertyIdentifier.equals(PropertyIdentifier.ObjectList)) {
+                Octet arrayIndexTag = propertyReader.next();
 
-            if (arrayIndexTag.getFirstNibble() == SDContextTag.TAG3LENGTH1.getFirstNibble()) {
-                SDContextTag sdContextTag = new SDContextTag(arrayIndexTag);
-                int numberofOctets = sdContextTag.findLength();
-                String numberHex = propertyReader.next(numberofOctets);
-                int arrayIndexNumber = toInt(numberHex);
-                readPropertyResult.setArrayIndexNumber(arrayIndexNumber);
-            }
-        }
-        //Expect next octet to be either property-value (4e) or property-access-error (4f)
-        Octet readResultOctet = propertyReader.next();
-        //property-value
-        if (readResultOctet.equals(TAG4START)) {
-            Octet applicationTagOctet = propertyReader.next();
-            ApplicationTag applicationTag = new ApplicationTag(applicationTagOctet);
-            Object value = null;
-
-            ValueType valueType = applicationTag.findValueType();
-            switch (valueType) {
-                case Boolean:
-                    int length = applicationTag.findLength();
-                    if (length == 0) {
-                        readPropertyResult.addReadResult(propertyIdentifier, Boolean.FALSE);
-                    }
-                    break;
-                case Float:
-                    length = applicationTag.findLength();
-                    value = toFloat(propertyReader.next(length));
-                    readPropertyResult.addReadResult(propertyIdentifier, value);
-                    break;
-                case Long:
-                case Integer:
-                    length = applicationTag.findLength();
-                    value = toInt(propertyReader.nextOctets(length));
-                    readPropertyResult.addReadResult(propertyIdentifier, value);
-                    break;
-                case ObjectIdentifier:
-                    final String objectIdHexString = propertyReader.next(4);
-                    ParserResult<ObjectId> idResult = ObjectIdMapper.parse(objectIdHexString);
-                    ObjectId propertyObjectId = idResult.getParsedObject();
-                    readPropertyResult.addReadResult(propertyIdentifier, propertyObjectId);
-                    break;
-                case CharString:
-                    if (applicationTagOctet.getSecondNibble() == '5') {
-                        ParserResult<String> stringResult = parseCharStringExtended(propertyReader.unprocessedHexString());
-                        String text = stringResult.getParsedObject();
-                        if (text == null) {
-                            text = "";
-                        }
-                        readPropertyResult.addReadResult(propertyIdentifier, text);
-                        propertyReader.next(stringResult.getNumberOfOctetsRead());
-                    } else if (applicationTagOctet.getSecondNibble() == '1') {
-                        ParserResult<String> stringResult = parseCharString(propertyReader.unprocessedHexString(), 1);
-                        String text = stringResult.getParsedObject();
-                        if (text == null) {
-                            text = "";
-                        }
-                        readPropertyResult.addReadResult(propertyIdentifier, text);
-                        propertyReader.next(stringResult.getNumberOfOctetsRead());
-                    }
-                    break;
-                case Enumerated:
-                    length = applicationTag.findLength();
-                    Octet measurementUnitOctet = propertyReader.next();
-                    MeasurementUnit measurementUnit = MeasurementUnit.fromOctet(measurementUnitOctet);
-                    readPropertyResult.addReadResult(propertyIdentifier, measurementUnit);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Not implemented yet, " + valueType);
-            }
-            if (propertyReader.unprocessedHexString().startsWith(TAG4END.toString())) {
-                propertyReader.next();
-            }
-            parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
-        } else if (readResultOctet.equals(TAG5START)) {
-            //property-access-error
-            Octet applicationTagOctet = propertyReader.next();
-            ApplicationTag applicationTag = new ApplicationTag(applicationTagOctet);
-            if (applicationTag.findValueType().equals(ValueType.Enumerated)) {
-                Octet errorClassOctet = propertyReader.next();
-                ErrorClassType errorClass = ErrorClassType.fromChar(errorClassOctet.getSecondNibble());
-                Map<String, Enum> errorMap = new HashMap<>();
-                errorMap.put(ERROR_CLASS, errorClass);
-                readPropertyResult.addReadResult(PropertyIdentifier.XxError, errorMap);
-                applicationTagOctet = propertyReader.next();
-                applicationTag = new ApplicationTag(applicationTagOctet);
-                if (applicationTag.findValueType().equals(ValueType.Enumerated)) {
-                    Octet errorCodeOctet = propertyReader.next();
-                    ErrorCodeType errorCode = ErrorCodeType.fromOctet(errorCodeOctet);
-                    errorMap.put(ERROR_CODE, errorCode);
+                if (arrayIndexTag.getFirstNibble() == SDContextTag.TAG3LENGTH1.getFirstNibble()) {
+                    SDContextTag sdContextTag = new SDContextTag(arrayIndexTag);
+                    int numberofOctets = sdContextTag.findLength();
+                    String numberHex = propertyReader.next(numberofOctets);
+                    int arrayIndexNumber = toInt(numberHex);
+                    readPropertyResult.setArrayIndexNumber(arrayIndexNumber);
                 }
-                if (propertyReader.unprocessedHexString().startsWith(TAG5END.toString())) {
+            }
+            //Expect next octet to be either property-value (4e) or property-access-error (4f)
+            Octet readResultOctet = propertyReader.next();
+            //property-value
+            if (readResultOctet.equals(TAG4START)) {
+                Octet applicationTagOctet = propertyReader.next();
+                ApplicationTag applicationTag = new ApplicationTag(applicationTagOctet);
+                Object value = null;
+
+                ValueType valueType = applicationTag.findValueType();
+                switch (valueType) {
+                    case Boolean:
+                        int length = applicationTag.findLength();
+                        if (length == 0) {
+                            readPropertyResult.addReadResult(propertyIdentifier, Boolean.FALSE);
+                        }
+                        break;
+                    case Float:
+                        length = applicationTag.findLength();
+                        value = toFloat(propertyReader.next(length));
+                        readPropertyResult.addReadResult(propertyIdentifier, value);
+                        break;
+                    case Long:
+                    case Integer:
+                        length = applicationTag.findLength();
+                        value = toInt(propertyReader.nextOctets(length));
+                        readPropertyResult.addReadResult(propertyIdentifier, value);
+                        break;
+                    case ObjectIdentifier:
+                        final String objectIdHexString = propertyReader.next(4);
+                        ParserResult<ObjectId> idResult = ObjectIdMapper.parse(objectIdHexString);
+                        ObjectId propertyObjectId = idResult.getParsedObject();
+                        readPropertyResult.addReadResult(propertyIdentifier, propertyObjectId);
+                        break;
+                    case CharString:
+                        if (applicationTagOctet.getSecondNibble() == '5') {
+                            ParserResult<String> stringResult = parseCharStringExtended(propertyReader.unprocessedHexString());
+                            String text = stringResult.getParsedObject();
+                            if (text == null) {
+                                text = "";
+                            }
+                            readPropertyResult.addReadResult(propertyIdentifier, text);
+                            propertyReader.next(stringResult.getNumberOfOctetsRead());
+                        } else if (applicationTagOctet.getSecondNibble() == '1') {
+                            ParserResult<String> stringResult = parseCharString(propertyReader.unprocessedHexString(), 1);
+                            String text = stringResult.getParsedObject();
+                            if (text == null) {
+                                text = "";
+                            }
+                            readPropertyResult.addReadResult(propertyIdentifier, text);
+                            propertyReader.next(stringResult.getNumberOfOctetsRead());
+                        }
+                        break;
+                    case Enumerated:
+                        length = applicationTag.findLength();
+                        Octet measurementUnitOctet = propertyReader.next();
+                        MeasurementUnit measurementUnit = MeasurementUnit.fromOctet(measurementUnitOctet);
+                        readPropertyResult.addReadResult(propertyIdentifier, measurementUnit);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Not implemented yet, " + valueType);
+                }
+                if (propertyReader.unprocessedHexString().startsWith(TAG4END.toString())) {
                     propertyReader.next();
                 }
                 parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
-            }
-        } else {
+            } else if (readResultOctet.equals(TAG5START)) {
+                //property-access-error
+                Octet applicationTagOctet = propertyReader.next();
+                ApplicationTag applicationTag = new ApplicationTag(applicationTagOctet);
+                if (applicationTag.findValueType().equals(ValueType.Enumerated)) {
+                    Octet errorClassOctet = propertyReader.next();
+                    ErrorClassType errorClass = ErrorClassType.fromChar(errorClassOctet.getSecondNibble());
+                    Map<String, Enum> errorMap = new HashMap<>();
+                    errorMap.put(ERROR_CLASS, errorClass);
+                    readPropertyResult.addReadResult(PropertyIdentifier.XxError, errorMap);
+                    applicationTagOctet = propertyReader.next();
+                    applicationTag = new ApplicationTag(applicationTagOctet);
+                    if (applicationTag.findValueType().equals(ValueType.Enumerated)) {
+                        Octet errorCodeOctet = propertyReader.next();
+                        ErrorCodeType errorCode = ErrorCodeType.fromOctet(errorCodeOctet);
+                        errorMap.put(ERROR_CODE, errorCode);
+                    }
+                    if (propertyReader.unprocessedHexString().startsWith(TAG5END.toString())) {
+                        propertyReader.next();
+                    }
+                    parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+                }
+            } else {
 //            readPropertyResult.setInitialHexString(hexString);
-            parserResult.setParsedObject(readPropertyResult);
-            parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
-            String errorMessage = "Could not determine how to parse \"read-result\" starting with octet " + readResultOctet;
-            parserResult.setErrorMessage(errorMessage);
-            parserResult.setParsedOk(false);
-            throw new BacnetParserException(errorMessage, parserResult);
-        }
+                parserResult.setParsedObject(readPropertyResult);
+                parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+                String errorMessage = "Could not determine how to parse \"read-result\" starting with octet " + readResultOctet;
+                parserResult.setErrorMessage(errorMessage);
+                parserResult.setParsedOk(false);
+                throw new BacnetParserException(errorMessage, parserResult);
+            }
 
 //        parserResult.setInitialHexString(hexString);
-        parserResult.setParsedObject(readPropertyResult);
-        parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
-        parserResult.setParsedOk(true);
+            parserResult.setParsedObject(readPropertyResult);
+            parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+            parserResult.setParsedOk(true);
+        } catch (IllegalArgumentException e) {
+            parserResult.setParsedObject(readPropertyResult);
+            parserResult.setErrorMessage("Failed to build properties from. Reason: {}" + e.getMessage());
+            parserResult.setUnparsedHexString(propertyReader.unprocessedHexString());
+            parserResult.setParsedOk(false);
+        }
 
         return parserResult;
     }

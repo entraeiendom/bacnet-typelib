@@ -20,6 +20,12 @@ public class BacnetMessageParser {
         ParserResult<Bvlc> bvlcResult = BvlcParser.parse(fullBacnetHexString);
         String hexString = bvlcResult.getUnparsedHexString();
         ParserResult<Npdu> npduResult = NpduParser.parse(hexString);
+        Npdu npdu = null;
+        boolean expectingReply = false;
+        if (npduResult.isParsedOk()) {
+            npdu = npduResult.getParsedObject();
+            expectingReply = npdu.isExpectingResponse();
+        }
         hexString = npduResult.getUnparsedHexString();
         ParserResult<Apdu> apduResult = null;
         apduResult = ApduParser.parse(hexString);
@@ -40,13 +46,19 @@ public class BacnetMessageParser {
             } else {
                 serviceParserResult = ServiceParser.parse(serviceChoice, unparsedHexString);
             }
-            if (serviceParserResult != null && serviceParserResult.isParsedOk()) {
+            if (serviceParserResult != null) { // && serviceParserResult.isParsedOk()) {
                 ParserResult<Service> finalServiceParserResult = serviceParserResult;
+                boolean finalExpectingReply = expectingReply;
+                Npdu finalNpdu = npdu;
                 bacnetResponse = new BacnetResponse() {
 
                     @Override
                     public int statusCode() {
-                        return 0;
+                        if (finalServiceParserResult.isParsedOk()) {
+                            return 200;
+                        } else {
+                            return 500;
+                        }
                     }
 
                     @Override
@@ -57,6 +69,31 @@ public class BacnetMessageParser {
                     @Override
                     public Integer getInvokeId() {
                         return apdu.getInvokeId();
+                    }
+
+                    @Override
+                    public Npdu getNpdu() {
+                        return finalNpdu;
+                    }
+
+                    @Override
+                    public Apdu getApdu() {
+                        return apdu;
+                    }
+
+                    @Override
+                    public boolean expectingReply() {
+                        return finalExpectingReply;
+                    }
+
+                    @Override
+                    public boolean isSegmented() {
+                        return apdu.isSegmented();
+                    }
+
+                    @Override
+                    public boolean moreSegmentsFollows() {
+                        return apdu.isHasMoreSegments();
                     }
                 };
             }

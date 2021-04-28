@@ -31,9 +31,10 @@ class BitStringTest {
         bitString.setBit(2);
         bitString.setBit(3);
         bitString.setBit(4);
+        assertEquals("0000000000001111", bitString.toString());
         assertEquals("f", bitString.toHexString());
         assertEquals('f', bitString.toChar());
-        assertEquals("0000000000001111", bitString.toString());
+
     }
 
     @Test
