@@ -3,6 +3,8 @@ package no.entra.bacnet.apdu;
 import no.entra.bacnet.internal.apdu.MessageType;
 import no.entra.bacnet.services.ServiceChoice;
 
+import java.util.BitSet;
+
 public class Apdu {
 
     private final MessageType messageType; //PDU type in spec. First char in ApduHexString
@@ -25,6 +27,9 @@ public class Apdu {
     private int proposedWindowSize;//TODO verify this is part of APDU, not Serviceimpl?
     private boolean senderIsServer;
     private String abortReason;
+    private boolean isNegativeAck;
+    private BitSet pduFlags;
+
 
     public Apdu(MessageType messageType) {
         this.messageType = messageType;
@@ -125,6 +130,14 @@ public class Apdu {
         return proposedWindowSize;
     }
 
+    public boolean isNegativeAck() {
+        return isNegativeAck;
+    }
+
+    public void setNegativeAck(boolean negativeAck) {
+        isNegativeAck = negativeAck;
+    }
+
     public void setSenderIsServer(boolean senderIsServer) {
         this.senderIsServer = senderIsServer;
     }
@@ -150,6 +163,7 @@ public class Apdu {
         private boolean hasMoreSegments;
         private boolean segmentedReplyAllowed;
         private boolean senderIsServer;
+        private boolean isNegativeAck;
 
         private ApduBuilder() {
         }
@@ -165,6 +179,7 @@ public class Apdu {
             apdu.isSegmented = segmented;
             apdu.hasMoreSegments = hasMoreSegments;
             apdu.isSegmentedReplyAllowed = segmentedReplyAllowed;
+            apdu.isNegativeAck = isNegativeAck;
             apdu.senderIsServer = senderIsServer;
             return apdu;
         }
@@ -225,6 +240,11 @@ public class Apdu {
 
         public ApduBuilder withMaxSegmentsAcceptedAbove64() {
             this.maxSegmentsAccepted = '7';
+            return this;
+        }
+
+        public ApduBuilder withIsNegativeAck(boolean isNegativeAck) {
+            this.isNegativeAck = isNegativeAck;
             return this;
         }
     }

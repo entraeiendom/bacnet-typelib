@@ -22,4 +22,32 @@ class ApduTest {
 
     }
 
+    @Test
+    void segmentAck() {
+        Apdu apdu = Apdu.ApduBuilder.builder()
+                .withApduType(MessageType.SegmentACK)
+                .withIsNegativeAck(false)
+                .withSenderIsServer(false)
+                .build();
+        String expectedHexString = "40";
+        assertEquals(expectedHexString, apdu.toHexString());
+        /*
+        BACnet-SegmentACK-PDU ::= SEQUENCE {
+pdu-type
+[0] Unsigned (0..15), -- 4 for this PDU type
+reserved
+[1] Unsigned (0..3), -- shall be set to zero
+negative-ack
+[2] BOOLEAN,
+server
+[3] BOOLEAN,
+original-invoke-id
+[4] Unsigned (0..255),
+sequence-number
+[5] Unsigned (0..255),
+actual-window-size
+[6] Unsigned (1..127)
+-- Context-spec
+         */
+    }
 }
