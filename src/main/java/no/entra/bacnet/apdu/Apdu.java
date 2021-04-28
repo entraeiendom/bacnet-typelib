@@ -2,11 +2,15 @@ package no.entra.bacnet.apdu;
 
 import no.entra.bacnet.internal.apdu.MessageType;
 import no.entra.bacnet.services.ServiceChoice;
-
-import java.util.BitSet;
+import no.entra.bacnet.utils.BitString;
 
 public class Apdu {
 
+    public static final int NEGATIVE_ACK_POSITION = 2;
+    private static final int SENDER_IS_SERVER_POSITION = 1;
+    private static final int SEGMENTED_REQUEST_POSITION = 4;
+    private static final int SEGMENTED_REPLY_POSITION = 2;
+    private static final int MORE_SEGMENTS_FOLLOW_POSITION = 3;
     private final MessageType messageType; //PDU type in spec. First char in ApduHexString
     private char applicationControlBits; //Second char in ApduHexString//2 = unsegmented request, no more segments, segmented response accepted
 
@@ -28,30 +32,24 @@ public class Apdu {
     private boolean senderIsServer;
     private String abortReason;
     private boolean isNegativeAck;
-    private BitSet pduFlags;
+    private final BitString pduFlags;
 
 
     public Apdu(MessageType messageType) {
         this.messageType = messageType;
+        pduFlags = new BitString(4);
     }
 
-    public Apdu(MessageType messageType, char applicationControlBits, char maxSegmentsAccepted, char maxApduLengthAccepted) {
+    public Apdu(MessageType messageType, char maxSegmentsAccepted, char maxApduLengthAccepted) {
         this.messageType = messageType;
         this.applicationControlBits = applicationControlBits;
         this.maxSegmentsAccepted = maxSegmentsAccepted;
         this.maxApduLengthAccepted = maxApduLengthAccepted;
+        pduFlags = new BitString(4);
     }
 
     public MessageType getMessageType() {
         return messageType;
-    }
-
-    public char getApplicationControlBits() {
-        return applicationControlBits;
-    }
-
-    public void setApplicationControlBits(char applicationControlBits) {
-        this.applicationControlBits = applicationControlBits;
     }
 
     public char getMaxSegmentsAccepted() {
@@ -87,31 +85,50 @@ public class Apdu {
     }
 
     public boolean isSegmented() {
-        return isSegmented;
+        return pduFlags.isBitSet(SEGMENTED_REQUEST_POSITION);
     }
 
     public void setSegmented(boolean segmented) {
-        isSegmented = segmented;
+        if (segmented) {
+            pduFlags.setBit(SEGMENTED_REQUEST_POSITION);
+        } else {
+            pduFlags.unsetBit(SEGMENTED_REQUEST_POSITION);
+        }
     }
 
     public boolean isSegmentedReplyAllowed() {
-        return isSegmentedReplyAllowed;
+        return pduFlags.isBitSet(SEGMENTED_REPLY_POSITION);
     }
 
     public void setSegmentedReplyAllowed(boolean segmentedReplyAllowed) {
-        isSegmentedReplyAllowed = segmentedReplyAllowed;
+        if (segmentedReplyAllowed) {
+            pduFlags.setBit(SEGMENTED_REPLY_POSITION);
+        } else {
+            pduFlags.unsetBit(SEGMENTED_REPLY_POSITION);
+        }
     }
 
     public boolean isHasMoreSegments() {
-        return hasMoreSegments;
+        return pduFlags.isBitSet(MORE_SEGMENTS_FOLLOW_POSITION);
     }
 
     public void setHasMoreSegments(boolean hasMoreSegments) {
-        this.hasMoreSegments = hasMoreSegments;
+        if (hasMoreSegments) {
+            pduFlags.setBit(MORE_SEGMENTS_FOLLOW_POSITION);
+        } else {
+            pduFlags.unsetBit(MORE_SEGMENTS_FOLLOW_POSITION);
+        }
     }
 
     public String toHexString() {
-        return "" + messageType.getPduTypeChar() + applicationControlBits + maxSegmentsAccepted + maxApduLengthAccepted;
+        String hexString = "" + messageType.getPduTypeChar() + pduFlags.toChar();
+        if (maxSegmentsAccepted != '\u0000') {
+            hexString = hexString + maxSegmentsAccepted;
+        }
+        if (maxApduLengthAccepted != '\u0000') {
+            hexString = hexString + maxApduLengthAccepted;
+        }
+        return hexString.replace(new String(new char[] {160}), "");
     }
 
     public void setSequenceNumber(int sequenceNumber) {
@@ -131,19 +148,27 @@ public class Apdu {
     }
 
     public boolean isNegativeAck() {
-        return isNegativeAck;
+        return pduFlags.isBitSet(NEGATIVE_ACK_POSITION);
     }
 
     public void setNegativeAck(boolean negativeAck) {
-        isNegativeAck = negativeAck;
+        if (negativeAck) {
+            pduFlags.setBit(NEGATIVE_ACK_POSITION);
+        } else {
+            pduFlags.unsetBit(NEGATIVE_ACK_POSITION);
+        }
     }
 
     public void setSenderIsServer(boolean senderIsServer) {
-        this.senderIsServer = senderIsServer;
+        if (senderIsServer) {
+            pduFlags.setBit(SENDER_IS_SERVER_POSITION);
+        } else {
+            pduFlags.unsetBit(SENDER_IS_SERVER_POSITION);
+        }
     }
 
     public boolean getSenderIsServer() {
-        return senderIsServer;
+        return pduFlags.isBitSet(SENDER_IS_SERVER_POSITION);
     }
 
     public void setAbortReason(String abortReason) {
@@ -174,20 +199,44 @@ public class Apdu {
         }
 
         public Apdu build() {
-            mapPduFlags();
-            Apdu apdu = new Apdu(apduType, pduFlags, maxSegmentsAccepted, maxApduLengthAccepted);
-            apdu.isSegmented = segmented;
-            apdu.hasMoreSegments = hasMoreSegments;
-            apdu.isSegmentedReplyAllowed = segmentedReplyAllowed;
-            apdu.isNegativeAck = isNegativeAck;
-            apdu.senderIsServer = senderIsServer;
-            return apdu;
-        }
-
-        protected void mapPduFlags() {
-            if (!segmented && !hasMoreSegments && segmentedReplyAllowed) {
-                pduFlags = '2';
+//            mapPduFlags();
+            //Documented in Bacnet Spec clause 20.1.xx
+            Apdu apdu = new Apdu(apduType, maxSegmentsAccepted, maxApduLengthAccepted);
+            switch (apduType) {
+                case SegmentACK:
+                    apdu.pduFlags.unsetBit(3);
+                    apdu.pduFlags.unsetBit(4);
+                    apdu.setNegativeAck(isNegativeAck);
+                    apdu.setSenderIsServer(senderIsServer);
+                    break;
+                case ConfirmedRequest:
+                    apdu.setSegmented(segmented);
+                    apdu.setHasMoreSegments(hasMoreSegments);
+                    apdu.setSegmentedReplyAllowed(segmentedReplyAllowed);
+                    break;
+                case ComplexAck:
+                    apdu.pduFlags.unsetBit(1);
+                    apdu.pduFlags.unsetBit(2);
+                    apdu.setSegmented(segmented);
+                    apdu.setHasMoreSegments(hasMoreSegments);
+                    break;
+                case Abort:
+                    apdu.pduFlags.unsetBit(1);
+                    apdu.pduFlags.unsetBit(2);
+                    apdu.pduFlags.unsetBit(3);
+                    apdu.setSenderIsServer(senderIsServer);
+                    break;
+                case Error:
+                case SimpleAck:
+                case UnconfirmedRequest:
+                default:
+                    apdu.pduFlags.unsetBit(1);
+                    apdu.pduFlags.unsetBit(2);
+                    apdu.pduFlags.unsetBit(3);
+                    apdu.pduFlags.unsetBit(4);
             }
+
+            return apdu;
         }
 
         public ApduBuilder withApduType(MessageType apduType) {
@@ -195,10 +244,6 @@ public class Apdu {
             return this;
         }
 
-        public ApduBuilder withPduFlags(char pduFlags) {
-            this.pduFlags = pduFlags;
-            return this;
-        }
 
         public ApduBuilder withMaxSegmentsAccepted(char maxSegmentsAccepted) {
             this.maxSegmentsAccepted = maxSegmentsAccepted;
