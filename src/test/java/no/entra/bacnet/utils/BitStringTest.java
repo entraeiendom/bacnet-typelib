@@ -3,8 +3,7 @@ package no.entra.bacnet.utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BitStringTest {
 
@@ -45,6 +44,16 @@ class BitStringTest {
         assertEquals("10", bitString.toHexString());
         assertThrows(IllegalStateException.class, () -> bitString.toChar());
         assertEquals("0000000000010000", bitString.toString());
+    }
 
+    @Test
+    void equalsTest() {
+        bitString = new BitString(16);
+        bitString.setBit(5);
+        BitString bitString2 = new BitString(16);
+        bitString2.setBit(5);
+        assertEquals(bitString, bitString2);
+        bitString2.unsetBit(5);
+        assertNotEquals(bitString, bitString2);
     }
 }

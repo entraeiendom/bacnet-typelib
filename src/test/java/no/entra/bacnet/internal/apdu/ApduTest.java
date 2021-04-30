@@ -33,4 +33,25 @@ class ApduTest {
         assertEquals(expectedHexString, apdu.toHexString());
 
     }
+
+    @Test
+    void equalsTest() {
+        Apdu apdu = Apdu.ApduBuilder.builder()
+                .withApduType(MessageType.ConfirmedRequest)
+                .isSegmented(false)
+                .hasMoreSegments(false)
+                .isSegmentedReplyAllowed(true)
+                .withMaxSegmentsAcceptedAbove64()
+                .withMaxApduLength1476()
+                .build();
+        Apdu apdu2 = Apdu.ApduBuilder.builder()
+                .withApduType(MessageType.ConfirmedRequest)
+                .isSegmented(false)
+                .hasMoreSegments(false)
+                .isSegmentedReplyAllowed(true)
+                .withMaxSegmentsAcceptedAbove64()
+                .withMaxApduLength1476()
+                .build();
+        assertEquals(apdu, apdu2);
+    }
 }

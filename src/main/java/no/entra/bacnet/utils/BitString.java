@@ -1,5 +1,8 @@
 package no.entra.bacnet.utils;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class BitString {
 
     private boolean rightToLeft = true;
@@ -105,5 +108,21 @@ public class BitString {
             }
         }
         return bitString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BitString bitString = (BitString) o;
+        return isRightToLeft() == bitString.isRightToLeft() &&
+                Arrays.equals(bits, bitString.bits);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(isRightToLeft());
+        result = 31 * result + Arrays.hashCode(bits);
+        return result;
     }
 }

@@ -4,6 +4,8 @@ import no.entra.bacnet.internal.apdu.MessageType;
 import no.entra.bacnet.services.ServiceChoice;
 import no.entra.bacnet.utils.BitString;
 
+import java.util.Objects;
+
 public class Apdu {
 
     public static final int NEGATIVE_ACK_POSITION = 2;
@@ -292,5 +294,56 @@ public class Apdu {
             this.isNegativeAck = isNegativeAck;
             return this;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Apdu{" +
+                "messageType=" + messageType +
+                ", applicationControlBits=" + applicationControlBits +
+                ", maxSegmentsAccepted=" + maxSegmentsAccepted +
+                ", maxApduLengthAccepted=" + maxApduLengthAccepted +
+                ", invokeId=" + invokeId +
+                ", serviceChoice=" + serviceChoice +
+                ", isSegmented=" + isSegmented +
+                ", isSegmentedReplyAllowed=" + isSegmentedReplyAllowed +
+                ", hasMoreSegments=" + hasMoreSegments +
+                ", sequenceNumber=" + sequenceNumber +
+                ", proposedWindowSize=" + proposedWindowSize +
+                ", senderIsServer=" + senderIsServer +
+                ", abortReason='" + abortReason + '\'' +
+                ", isNegativeAck=" + isNegativeAck +
+                ", pduFlags=" + pduFlags +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Apdu apdu = (Apdu) o;
+        return applicationControlBits == apdu.applicationControlBits &&
+
+                getMaxSegmentsAccepted() == apdu.getMaxSegmentsAccepted() &&
+                getMaxApduLengthAccepted() == apdu.getMaxApduLengthAccepted() &&
+                getInvokeId() == apdu.getInvokeId() &&
+                isSegmented() == apdu.isSegmented() &&
+                isSegmentedReplyAllowed() == apdu.isSegmentedReplyAllowed() &&
+                isHasMoreSegments() == apdu.isHasMoreSegments() &&
+                getSequenceNumber() == apdu.getSequenceNumber() &&
+
+                getProposedWindowSize() == apdu.getProposedWindowSize() &&
+                getSenderIsServer() == apdu.getSenderIsServer() &&
+                isNegativeAck() == apdu.isNegativeAck() &&
+                getMessageType() == apdu.getMessageType() &&
+                Objects.equals(getServiceChoice(), apdu.getServiceChoice()) &&
+                Objects.equals(getAbortReason(), apdu.getAbortReason()) &&
+                Objects.equals(pduFlags, apdu.pduFlags);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMessageType(), applicationControlBits, getMaxSegmentsAccepted(), getMaxApduLengthAccepted(), getInvokeId(), getServiceChoice(), isSegmented(), isSegmentedReplyAllowed(), isHasMoreSegments(), getSequenceNumber(), getProposedWindowSize(), getSenderIsServer(), getAbortReason(), isNegativeAck(), pduFlags);
     }
 }
