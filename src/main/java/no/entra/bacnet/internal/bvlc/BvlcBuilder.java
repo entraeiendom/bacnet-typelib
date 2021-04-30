@@ -3,10 +3,13 @@ package no.entra.bacnet.internal.bvlc;
 import no.entra.bacnet.bvlc.Bvlc;
 import no.entra.bacnet.octet.Octet;
 
+import static no.entra.bacnet.BacnetConstants.MAX_BVLC_OCTETS_LENGTH;
 import static no.entra.bacnet.bvlc.Bvlc.findExpectdNumberOfOctetsInBvll;
 
 
 public class BvlcBuilder {
+
+
 
     private final BvlcFunction function;
     private int fullMessageOctetLength;
@@ -22,8 +25,8 @@ public class BvlcBuilder {
         return this;
     }
     public BvlcBuilder withTotalNumberOfOctets(int numberOfOctets) {
-        if (numberOfOctets > 1024) {
-            throw new IllegalArgumentException("Bacnet only support 1024 octets");
+        if (numberOfOctets > MAX_BVLC_OCTETS_LENGTH) {
+            throw new IllegalArgumentException("Bacnet only support " + MAX_BVLC_OCTETS_LENGTH +" octets");
         }
         this.fullMessageOctetLength = numberOfOctets;
         return this;
