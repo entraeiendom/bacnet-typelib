@@ -4,6 +4,9 @@ package no.entra.bacnet.npdu;
 import no.entra.bacnet.octet.Octet;
 import no.entra.bacnet.utils.HexUtils;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static no.entra.bacnet.utils.HexUtils.octetsToString;
 
 public class Npdu {
@@ -110,4 +113,26 @@ public class Npdu {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Npdu npdu = (Npdu) o;
+        return isExpectingResponse() == npdu.isExpectingResponse() &&
+                Objects.equals(getControl(), npdu.getControl()) &&
+                Arrays.equals(getSourceNetworkAddress(), npdu.getSourceNetworkAddress()) &&
+                Arrays.equals(getSourceMacLayerAddress(), npdu.getSourceMacLayerAddress()) &&
+                Arrays.equals(getDestinationNetworkAddress(), npdu.getDestinationNetworkAddress()) &&
+                Objects.equals(getDestinationMacLayerAddress(), npdu.getDestinationMacLayerAddress()) &&
+                Objects.equals(getHopCount(), npdu.getHopCount());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getControl(), getDestinationMacLayerAddress(), getHopCount(), isExpectingResponse());
+        result = 31 * result + Arrays.hashCode(getSourceNetworkAddress());
+        result = 31 * result + Arrays.hashCode(getSourceMacLayerAddress());
+        result = 31 * result + Arrays.hashCode(getDestinationNetworkAddress());
+        return result;
+    }
 }

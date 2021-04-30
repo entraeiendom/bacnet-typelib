@@ -4,8 +4,7 @@ import no.entra.bacnet.npdu.Npdu;
 import no.entra.bacnet.octet.Octet;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NpduTest {
 
@@ -27,4 +26,12 @@ class NpduTest {
         assertFalse(npdu.isDestinationAvailable());
     }
 
+    @Test
+    void equalsTest() {
+        Npdu npdu = new Npdu();
+        npdu.setControl(Octet.fromHexString(NpduControl.DestinationSpecifier.getNpduControlHex()));
+        Npdu npdu2 = new Npdu();
+        npdu2.setControl(Octet.fromHexString(NpduControl.DestinationSpecifier.getNpduControlHex()));
+        assertEquals(npdu, npdu2);
+    }
 }
