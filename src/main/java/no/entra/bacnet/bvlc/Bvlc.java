@@ -101,4 +101,17 @@ public class Bvlc {
                 ", port=" + Arrays.toString(port) +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bvlc bvlc = (Bvlc) o;
+        return getBvlcLength() == bvlc.getBvlcLength() &&
+                getFullMessageLength() == bvlc.getFullMessageLength() &&
+                getType().equals(bvlc.getType()) &&
+                getFunction() == bvlc.getFunction() &&
+                ((getOriginatingDeviceIp() == null && bvlc.getOriginatingDeviceIp() == null)) || getOriginatingDeviceIp().equals(bvlc.getOriginatingDeviceIp()) &&
+                getPort() == bvlc.getPort();
+    }
 }

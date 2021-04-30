@@ -13,4 +13,11 @@ class BvlcTest {
         Bvlc bvlc = new Bvlc(BvlcFunction.OriginalUnicastNpdu,23);
         assertEquals(expected, bvlc.toHexString());
     }
+
+    @Test
+    void equalsTest() {
+        Bvlc bvlc = new Bvlc(BvlcFunction.OriginalUnicastNpdu,23);
+        Bvlc equals = new Bvlc(BvlcFunction.OriginalUnicastNpdu,23);
+        assertEquals(equals, bvlc);
+    }
 }
