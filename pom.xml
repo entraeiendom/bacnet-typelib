@@ -5,7 +5,7 @@
 
   <groupId>no.entra.bacnet</groupId>
   <artifactId>bacnet-typelib</artifactId>
-  <version>0.14.2</version>
+  <version>0.14.3-SNAPSHOT</version>
 
   <name>bacnetTypelib</name>
   <url>https://github.com/entraeiendom/bacnet-typelib/blob/master/README.md</url>
@@ -23,7 +23,7 @@
     <developerConnection>scm:git:ssh://git@github.com/entraeiendom/bacnet-typelib.git</developerConnection>
     <connection>scm:git:https://github.com/entraeiendom/bacnet-typelib.git</connection>
     <url>https://github.com/entraeiendom/bacnet-typelib</url>
-    <tag>bacnet-typelib-0.14.2</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>
