@@ -98,6 +98,9 @@ public class Npdu {
 
     public String toHexString() {
         String hexString = version.toString() + control.toString();
+        if (isDestinationAvailable()) {
+            hexString += octetsToString(destinationNetworkAddress) + destinationMacLayerAddress + hopCount;
+        }
         return hexString;
     }
 
@@ -135,4 +138,6 @@ public class Npdu {
         result = 31 * result + Arrays.hashCode(getDestinationNetworkAddress());
         return result;
     }
+
+
 }

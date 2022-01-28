@@ -20,6 +20,9 @@ class NpduTest {
     @Test
     void isDestinationAvailable() {
         Npdu npdu = new Npdu();
+        Octet[] destinationNetworkAddress = {new Octet("ff"), new Octet("ff")};
+        Octet destinationMacLayerAddress = new Octet("00");
+        Octet hopCount = new Octet("ff");
         npdu.setControl(Octet.fromHexString(NpduControl.DestinationSpecifier.getNpduControlHex()));
         assertTrue(npdu.isDestinationAvailable());
         npdu.setControl(Octet.fromHexString("00"));

@@ -3,6 +3,7 @@ package no.entra.bacnet.internal.npdu;
 
 import no.entra.bacnet.npdu.Npdu;
 import no.entra.bacnet.octet.Octet;
+import no.entra.bacnet.utils.BitString;
 
 //TODO #1 Set Control based on bits
 public class NpduBuilder {
@@ -12,6 +13,7 @@ public class NpduBuilder {
     private Octet[] destinationNetworkAddress;
     private Octet destinationMacLayerAddress;
     private Octet hopCount;
+    private boolean hasDestinationSpecifier;
 
     public NpduBuilder(Octet control) {
         this.version = Octet.fromHexString("01");
@@ -32,6 +34,11 @@ public class NpduBuilder {
         return this;
     }
 
+    public NpduBuilder setDestinationSpecifierControlBit(boolean destinationIsSpecified) {
+        this.hasDestinationSpecifier = destinationIsSpecified;
+        return this;
+    }
+
     public NpduBuilder withDestinationNetworkAddress(Octet[] destinationNetworkAddress) {
         this.destinationNetworkAddress = destinationNetworkAddress;
         return this;
@@ -45,8 +52,20 @@ public class NpduBuilder {
         return this;
     }
 
+
     public Npdu build() {
+        BitString destinationControl = new BitString(4);
+        BitString sourceControl = new BitString(4);
         Npdu npdu = new Npdu();
+        if (hasDestinationSpecifier) {
+            destinationControl.setBit(2);
+            npdu.setDestinationNetworkAddress(destinationNetworkAddress);
+            npdu.setDestinationMacLayerAddress(destinationMacLayerAddress);
+            npdu.setHopCount(hopCount);
+        }
+        if (control == null) {
+            control = new Octet(destinationControl.toHexString() + sourceControl.toHexString());
+        }
         npdu.setControl(control);
         if (control.getSecondNibble() == '4') {
             npdu.expectingResponse(true);
@@ -54,5 +73,6 @@ public class NpduBuilder {
 
         return npdu;
     }
+
 
 }

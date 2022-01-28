@@ -3,6 +3,7 @@ package no.entra.bacnet.internal.npdu;
 
 import no.entra.bacnet.octet.Octet;
 
+//TODO implement NPDU control using BitString
 public enum  NpduControl {
     NormalMessage("00"),
     SourceAvailable("08"),
