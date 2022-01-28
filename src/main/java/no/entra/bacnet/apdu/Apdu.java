@@ -6,6 +6,8 @@ import no.entra.bacnet.utils.BitString;
 
 import java.util.Objects;
 
+import static no.entra.bacnet.utils.HexUtils.intToHexString;
+
 public class Apdu {
 
     public static final int NEGATIVE_ACK_POSITION = 2;
@@ -21,10 +23,10 @@ public class Apdu {
 
     //Used for all BacnetRequest that require a response. See ConfirmedServiceRequest. Response will
     // match this invokeId.
-    private int invokeId;
+    private Integer invokeId = null;
 
     //Eg WhoIs, IAm, ReadPropertiesMultiple
-    private ServiceChoice serviceChoice;
+    private ServiceChoice serviceChoice = null;
 
     private boolean isSegmented;
     private boolean isSegmentedReplyAllowed;
@@ -70,7 +72,7 @@ public class Apdu {
         this.maxApduLengthAccepted = maxApduLengthAccepted;
     }
 
-    public int getInvokeId() {
+    public Integer getInvokeId() {
         return invokeId;
     }
 
@@ -129,6 +131,11 @@ public class Apdu {
         }
         if (maxApduLengthAccepted != '\u0000') {
             hexString = hexString + maxApduLengthAccepted;
+        }
+        if (messageType.equals(MessageType.ConfirmedRequest)) {
+            if (invokeId != null && serviceChoice != null) {
+                hexString += intToHexString(getInvokeId(), 2) + serviceChoice.getServiceChoiceHex();
+            }
         }
         return hexString.replace(new String(new char[] {160}), "");
     }
@@ -191,6 +198,8 @@ public class Apdu {
         private boolean segmentedReplyAllowed;
         private boolean senderIsServer;
         private boolean isNegativeAck;
+        private Integer invokeId = null;
+        private ServiceChoice serviceChoice = null;
 
         private ApduBuilder() {
         }
@@ -215,6 +224,12 @@ public class Apdu {
                     apdu.setSegmented(segmented);
                     apdu.setHasMoreSegments(hasMoreSegments);
                     apdu.setSegmentedReplyAllowed(segmentedReplyAllowed);
+                    if (invokeId != null) {
+                        apdu.setInvokeId(invokeId);
+                    }
+                    if (serviceChoice != null) {
+                        apdu.setServiceChoice(serviceChoice);
+                    }
                     break;
                 case ComplexAck:
                     apdu.pduFlags.unsetBit(1);
@@ -280,6 +295,10 @@ public class Apdu {
             return this;
         }
 
+        public ApduBuilder withMaxApduLength206() {
+            this.maxApduLengthAccepted = '2';
+            return this;
+        }
         public ApduBuilder withMaxApduLength1476() {
             this.maxApduLengthAccepted = '5';
             return this;
@@ -292,6 +311,15 @@ public class Apdu {
 
         public ApduBuilder withIsNegativeAck(boolean isNegativeAck) {
             this.isNegativeAck = isNegativeAck;
+            return this;
+        }
+
+        public ApduBuilder withInvokeId(int invokeId) {
+            this.invokeId = invokeId;
+            return this;
+        }
+        public ApduBuilder withServiceChoice(ServiceChoice serviceChoice) {
+            this.serviceChoice = serviceChoice;
             return this;
         }
     }

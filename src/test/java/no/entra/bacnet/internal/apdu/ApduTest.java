@@ -1,6 +1,7 @@
 package no.entra.bacnet.internal.apdu;
 
 import no.entra.bacnet.apdu.Apdu;
+import no.entra.bacnet.services.ConfirmedServiceChoice;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,5 +54,22 @@ class ApduTest {
                 .withMaxApduLength1476()
                 .build();
         assertEquals(apdu, apdu2);
+    }
+
+    @Test
+    void subscribeCovTest() {
+        String expectedHex = "00020f05";
+        Apdu apdu = Apdu.ApduBuilder.builder()
+                .withApduType(MessageType.ConfirmedRequest)
+                .isSegmented(false)
+                .hasMoreSegments(false)
+                .isSegmentedReplyAllowed(false)
+                .withMaxSegmentsAccepted('0')
+                .withMaxApduLength206()
+                .withInvokeId(15)
+                .withServiceChoice(ConfirmedServiceChoice.SubscribeCov)
+                .build();
+        assertEquals(expectedHex,apdu.toHexString());
+
     }
 }
