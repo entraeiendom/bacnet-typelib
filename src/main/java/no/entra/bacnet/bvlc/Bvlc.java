@@ -8,6 +8,7 @@ import java.util.Arrays;
 import static no.entra.bacnet.utils.HexUtils.intToHexString;
 
 public class Bvlc {
+    public static final int BVLC_OCTET_LENGTH = 4;
     private final Octet type = Octet.fromHexString("81");
     private final BvlcFunction function;
     private int bvlcLength = -1;
