@@ -72,4 +72,20 @@ class ApduTest {
         assertEquals(expectedHex,apdu.toHexString());
 
     }
+
+    @Test
+    void ackSubscribeCovTest() {
+        Apdu apdu = Apdu.ApduBuilder.builder()
+                .withApduType(MessageType.SimpleAck)
+                .isSegmented(false)
+                .hasMoreSegments(false)
+                .isSegmentedReplyAllowed(false)
+                .withMaxSegmentsAccepted('0')
+                .withMaxApduLength206()
+                .withInvokeId(15)
+                .withServiceChoice(ConfirmedServiceChoice.ConfirmedCovNotificationMultiple)
+                .build();
+        String expectedHex = "20020f1f";
+        assertEquals(expectedHex,apdu.toHexString());
+    }
 }

@@ -132,7 +132,7 @@ public class Apdu {
         if (maxApduLengthAccepted != '\u0000') {
             hexString = hexString + maxApduLengthAccepted;
         }
-        if (messageType.equals(MessageType.ConfirmedRequest)) {
+        if (messageType.equals(MessageType.ConfirmedRequest) || messageType.equals(MessageType.SimpleAck)) {
             if (invokeId != null && serviceChoice != null) {
                 hexString += intToHexString(getInvokeId(), 2) + serviceChoice.getServiceChoiceHex();
             }
@@ -245,6 +245,17 @@ public class Apdu {
                     break;
                 case Error:
                 case SimpleAck:
+                    if (invokeId != null) {
+                        apdu.setInvokeId(invokeId);
+                    }
+                    if (serviceChoice != null) {
+                        apdu.setServiceChoice(serviceChoice);
+                    }
+                    apdu.pduFlags.unsetBit(1);
+                    apdu.pduFlags.unsetBit(2);
+                    apdu.pduFlags.unsetBit(3);
+                    apdu.pduFlags.unsetBit(4);
+                    break;
                 case UnconfirmedRequest:
                 default:
                     apdu.pduFlags.unsetBit(1);
