@@ -14,6 +14,7 @@ import no.entra.bacnet.properties.ReadPropertyMultipleService;
 import no.entra.bacnet.property.ReadPropertyResponse;
 import no.entra.bacnet.property.ReadPropertyService;
 import no.entra.bacnet.services.AbortService;
+import no.entra.bacnet.services.ConfirmedServiceChoice;
 import no.entra.bacnet.services.Service;
 import no.entra.bacnet.services.WhoIsService;
 import org.junit.jupiter.api.Test;
@@ -152,5 +153,14 @@ class BacnetMessageParserTest {
         assertEquals(2, bacnetResponse.getApdu().getProposedWindowSize());
         Service service = bacnetResponse.getService();
         assertNull(service); //Partial message. The client will need to concat all the segments before parsing.
+    }
+
+    @Test
+    void parseConfirmedCovNotification() {
+        String hexString = "810a002a01000005f90109011c020000082c0080000139004e09552e4441b9335c2f096f2e8204002f4f";
+        BacnetResponse bacnetResponse = BacnetMessageParser.parse(hexString);
+        assertNotNull(bacnetResponse);
+        assertEquals(249, bacnetResponse.getInvokeId());
+        assertEquals(ConfirmedServiceChoice.ConfirmedCovNotification,bacnetResponse.getApdu().getServiceChoice());
     }
 }
