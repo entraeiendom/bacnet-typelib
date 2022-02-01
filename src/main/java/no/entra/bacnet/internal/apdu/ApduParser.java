@@ -86,6 +86,11 @@ public class ApduParser {
                         Octet invokeIdOctet = serviceReader.next();
                         int invokeId = toInt(invokeIdOctet);
                         apdu.setInvokeId(invokeId);
+                    } else if (messageType.equals(MessageType.ConfirmedRequest)) {
+                        Octet maxApduOctetsAccepted = serviceReader.next();
+                        Octet invokeIdOctet = serviceReader.next();
+                        int invokeId = toInt(invokeIdOctet);
+                        apdu.setInvokeId(invokeId);
                     }
                     serviceChoiceOctet = serviceReader.next();
                     //Could be ConfirmedServiceChoice, or UnconfirmedServiceChoice
@@ -93,7 +98,7 @@ public class ApduParser {
                     apdu.setServiceChoice(serviceChoice);
 
                 } else {
-                    //TODO implemnt this else clause
+                    //TODO implement this else clause
                     parserResult.setParsedOk(false);
                     parserResult.setErrorMessage("Not implemented yet");
 //                    parserResult.setUnparsedHexString(serviceReader.unprocessedHexString());
@@ -140,6 +145,19 @@ public class ApduParser {
         switch (messageType) {
             case Abort:
             case Reject:
+            case SegmentACK:
+                hasServiceChoice = false;
+                break;
+            default:
+                hasServiceChoice = true;
+
+        }
+        return hasServiceChoice;
+    }
+
+    private static boolean hasServiceChoice(MessageType messageType) {
+        boolean hasServiceChoice = true;
+        switch (messageType) {
             case SegmentACK:
                 hasServiceChoice = false;
                 break;

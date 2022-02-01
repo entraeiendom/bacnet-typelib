@@ -180,4 +180,15 @@ class ApduParserTest {
         assertEquals(0, apdu.getSequenceNumber());
         assertEquals(9, apdu.getProposedWindowSize());
     }
+
+    @Test
+    void confirmedCovNotificationRequestTest() {
+        String hexString = "0005f90109011c020000082c0080000139004e09552e4441b9335c2f096f2e8204002f4f";
+        ParserResult<Apdu> parserResult = ApduParser.parse(hexString);
+        Apdu apdu = parserResult.getParsedObject();
+        assertFalse(apdu.getSenderIsServer());
+        assertEquals(249, apdu.getInvokeId());
+        assertEquals(ConfirmedServiceChoice.ConfirmedCovNotification, apdu.getServiceChoice());
+
+    }
 }
